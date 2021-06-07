@@ -1,17 +1,26 @@
 package com.spring.proyectoTituloMVC.Entity;
 
+import java.util.List;
+
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
 @Table (name="user")
-public class User {
+public class User implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -40,10 +49,18 @@ public class User {
 	@NotEmpty @NotNull
 	private String password;
 	
+	//rol = 1, cliente. rol = 2, empresa
 	@Column(name="rol")
 	@NotNull
 	private int rol;
-	//rol = 1, cliente. rol = 2, empresa
+	
+	//relación bi-direccional con Event
+	@OneToMany(mappedBy="empresa")
+	private List<Event> misEventos;
+	
+	//relación bi-direccional con User rol cliente. Un Cliente participa a muchos Eventos
+	@OneToMany(mappedBy="cliente")
+	private List<Participation> misParticipaciones;
 	
 	public int getIdCliente() {
 		return idCliente;
@@ -108,4 +125,22 @@ public class User {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
+
+	public List<Event> getMisEventos() {
+		return misEventos;
+	}
+
+	public void setMisEventos(List<Event> misEventos) {
+		this.misEventos = misEventos;
+	}
+
+	public List<Participation> getMisParticipaciones() {
+		return misParticipaciones;
+	}
+
+	public void setMisParticipaciones(List<Participation> misParticipaciones) {
+		this.misParticipaciones = misParticipaciones;
+	}
+	
+	
 }
