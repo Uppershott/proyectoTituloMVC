@@ -50,7 +50,7 @@ public class Event implements Serializable {
 	private String detalle;
 	
 	@Column (name="precio")
-	private Long precio;
+	private Double precio;
 	
 	//relación bi-direccional con User rol empresa
 	@ManyToOne
@@ -121,11 +121,11 @@ public class Event implements Serializable {
 		this.detalle = detalle;
 	}
 
-	public Long getPrecio() {
+	public Double getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(Long precio) {
+	public void setPrecio(Double precio) {
 		this.precio = precio;
 	}
 

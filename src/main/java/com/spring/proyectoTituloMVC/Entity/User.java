@@ -54,7 +54,7 @@ public class User implements Serializable{
 	@NotNull
 	private int rol;
 	
-	//relación bi-direccional con Event
+	//relación bi-direccional con Event. User.empresa crea eventos
 	@OneToMany(mappedBy="empresa")
 	private List<Event> misEventos;
 	

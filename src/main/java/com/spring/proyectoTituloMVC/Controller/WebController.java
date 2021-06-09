@@ -25,10 +25,36 @@ public class WebController {
 	@GetMapping("/index.html")
 	public String home(Model model, HttpSession session)
 	{
-		model.addAttribute("user", new User());
-		session.setAttribute("user", new User());
+		User user = (User)session.getAttribute("user");
+		//User user = (User) model.getAttribute("user");
+		System.out.println("User en index: "+ user.getNombre());
+		if(user.getNombre() == null) {
+			model.addAttribute("user", new User());
+			session.setAttribute("user", new User());
+		}else {
+			model.addAttribute("user", user);
+			session.setAttribute("user", user);
+		}
 		
 		return "index";
+	}
+	
+	//nuevo
+	@GetMapping("/profile.html")
+	public String profile(Model model, HttpSession session) {
+		return "profile";
+	}
+	
+	//nuevo
+	@GetMapping("/myOrders.html")
+	public String myOrders(Model model, HttpSession session) {
+		return "myOrders";
+	}
+	
+	//nuevo
+	@GetMapping("/myEvents.html")
+	public String myEvents(Model model, HttpSession session) {
+		return "myEvents";
 	}
 	
 	@GetMapping("/register.html")

@@ -14,5 +14,6 @@ public interface UserRepository extends JpaRepository <User,Integer>{
 	User findByRut(String rut);
 	User findByCorreo(String correo);
 	List <User> findByRol(int rol);
+	
 	<S extends User> S save(User user);
 }

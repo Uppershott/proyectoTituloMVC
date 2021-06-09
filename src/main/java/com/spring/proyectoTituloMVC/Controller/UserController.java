@@ -85,10 +85,11 @@ public class UserController {
 			result.addError(new FieldError("user", "password", "Contraseña incorrecta"));
 		}else if(user.getCorreo().equals(userService.getUserByCorreo(user.getCorreo()).getCorreo())) {
 			User userAux = userService.getUserByCorreo(user.getCorreo());	
+			System.out.println("Numero de telefono: "+ userAux.getTelefono());
 			session.setAttribute("user", userAux);
-			System.out.println("Agregado user: "+user.getNombre()+" a session...");
+			System.out.println("Agregado user: "+userAux.getNombre()+" a session...");
 			model.addAttribute("user", userAux);
-			System.out.println("Agregado user: "+user.getNombre()+" a model...");
+			System.out.println("Agregado user: "+userAux.getNombre()+" a model...");
 		}
 		
 		if(result.hasErrors()) return "login";
