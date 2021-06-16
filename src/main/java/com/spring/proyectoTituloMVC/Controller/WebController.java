@@ -18,8 +18,15 @@ public class WebController {
 		/*model.addAttribute("user", new User());
 		session.setAttribute("user", new User());
 		
-		return "login";*/
-		return volverAInicio(model,session);
+		return "login";
+		return volverAInicio(model,session);*/
+		
+		
+		
+		model.addAttribute("user", new User());
+		session.setAttribute("user", new User());
+		
+		return "index";
 	}
 	
 	@GetMapping("/index.html")
@@ -42,7 +49,20 @@ public class WebController {
 	//nuevo
 	@GetMapping("/profile.html")
 	public String profile(Model model, HttpSession session) {
+		
+		//model.addAttribute("userEdit", new User());
+		//session.setAttribute("userEdit", new User());
+		
 		return "profile";
+	}
+	
+	@GetMapping("/profileEdit.html")
+	public String profileEdit(Model model, HttpSession session) {
+		System.out.println("WebController profileEdit");
+		model.addAttribute("userEdit", new User());
+		session.setAttribute("userEdit", new User());
+		System.out.println("profileEdit - Agregado userEdit a model y session");
+		return "profileEdit";
 	}
 	
 	//nuevo
@@ -60,11 +80,35 @@ public class WebController {
 	@GetMapping("/register.html")
 	public String register(Model model, HttpSession session){
 		System.out.println("Entró al register de web controller");
+		
+		
 		model.addAttribute("user", new User());
-		session.setAttribute("user", null);
+		session.setAttribute("user", new User());
 		System.out.println("Creo model y session");
 		
 		return "register";
+	}
+	
+	@GetMapping("/events.html")
+	public String events(Model model, HttpSession session) {
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			return "events";
+		}
+	}
+	
+	@GetMapping("/company.html")
+	public String company(Model model, HttpSession session) {
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			return "company";
+		}
 	}
 	
 	String volverAInicio(Model model, HttpSession session){

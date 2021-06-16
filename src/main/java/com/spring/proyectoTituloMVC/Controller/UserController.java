@@ -35,15 +35,8 @@ public class UserController {
 		return "login";
 	}
 	
-	/*@RequestMapping(value = "/register", method=RequestMethod.GET)
-	public String register(Model model, HttpSession session) {
-		model.addAttribute("user", new User());
-		session.setAttribute("user", new User());
-		return "register";
-	}*/
-	
-	@RequestMapping(value="/registering", method=RequestMethod.POST)
-	public String registering(@ModelAttribute("user") User user, Model model, BindingResult result, HttpSession session) {
+	@RequestMapping(value="/clientRegistering", method=RequestMethod.POST)
+	public String clientRegistering(@ModelAttribute("user") User user, Model model, BindingResult result, HttpSession session) {
 		System.out.println("Iniciando proceso de registro de cuenta...");
 		
 		String rut = user.getRut();
@@ -64,8 +57,39 @@ public class UserController {
 		}
 		
 		if(result.hasErrors()) return "register";
+				
+		user.setRol(1);
+		System.out.println(user.getNombre()+" "+user.getPassword());
+		userService.save(user);
+		model.addAttribute("user", user);
+		session.setAttribute("user", user);
+		return "index"; //login
+	}
+	
+	@RequestMapping(value="/companyRegistering", method=RequestMethod.POST)
+	public String companyRegistering(@ModelAttribute("user") User user, Model model, BindingResult result, HttpSession session) {
+		System.out.println("Iniciando proceso de registro de cuenta...");
 		
+		String rut = user.getRut();
+		rut = rut.toUpperCase();
+		rut = rut.replace(".", "");
+		rut = rut.replace("-", "");
+		user.setRut(rut);
 		
+		if(userService.getUserByRut(user.getRut()) != null){
+			System.out.println("Error: el RUT ingresado ya se encuentra registrado");
+			result.addError(new FieldError("user", "rut", "El RUT ingresado ya se encuentra registrado!"));
+		}else if(userService.getUserByCorreo(user.getCorreo()) != null){
+			System.out.println("Error: el Correo ingresado ya se encuentra registrado");
+			result.addError(new FieldError("user", "correo", "El Correo ingresado ya se encuentra registrado!"));
+		}else if(!isValid(user.getRut())) {
+			System.out.println("Error: el RUT ingresado no es válido");
+			result.addError(new FieldError("user", "rut", "El RUT ingresado no es válido!"));
+		}
+		
+		if(result.hasErrors()) return "register";
+				
+		user.setRol(2);
 		System.out.println(user.getNombre()+" "+user.getPassword());
 		userService.save(user);
 		model.addAttribute("user", user);
@@ -96,6 +120,55 @@ public class UserController {
 		
 		return "index";
 	}
+	
+	@RequestMapping(value="/profileEditing", method=RequestMethod.POST)
+	public String profileEditing(@ModelAttribute("userEdit") User userEdit, Model model, HttpSession session, BindingResult result) {
+		System.out.println("Iniciando el proceso de verificación en cambio de datos de perfil...");
+		
+		/*
+		if(userEdit.getNombre()==null) {
+			System.out.println("Error: el nombre se encuentra vacío");
+			result.addError(new FieldError("userEdit", "nombre", "El nombre se encuentra vacío"));
+		}else if(userEdit.getCorreo() == null) {
+			System.out.println("Error: el correo se encuentra vacío");
+			result.addError(new FieldError("userEdit", "correo", "El correo se encuentra vacío"));
+		}else if(userEdit.getTelefono()==0) {
+			System.out.println("Error: el teléfono se encuentra vacío");
+			result.addError(new FieldError("userEdit", "telefono", "El teléfono se encuentra vacío"));
+		}else if(userEdit.getDireccion()==null) {
+			System.out.println("Error: la dirección se encuentra vacía");
+			result.addError(new FieldError("userEdit", "direccion", "La direccion se encuentra vacía"));
+		}else 
+		*/
+		
+		User userAux = (User) session.getAttribute("user");
+		
+		if(userService.getUserByCorreo(userEdit.getCorreo())!=null && !userAux.getCorreo().equalsIgnoreCase(userEdit.getCorreo())) {
+			System.out.println("Error: El correo ya se encuentra registrado");
+			result.addError(new FieldError("userEdit","correo", "El correo ingresado ya se encuentra registrado"));
+		}
+		
+		if(result.hasErrors()) return "profileEdit";
+		
+		System.out.println("Iniciando proceso de guardado de nuevos datos de perfil");
+		
+		System.out.println("Usuario: "+ userAux.getNombre()+" obtenido de session");
+		
+		userAux.setNombre(userEdit.getNombre());
+		userAux.setCorreo(userEdit.getCorreo());
+		userAux.setTelefono(userEdit.getTelefono());
+		userAux.setDireccion(userEdit.getDireccion());
+		if(userAux.getRol()==2) userAux.setLink1(userEdit.getLink1());
+		userAux.setLink2(userEdit.getLink2());
+		userAux.setLink3(userEdit.getLink3());
+		
+		System.out.println("Nuevos datos de Usuario: "+userAux.getNombre()+" preparado para guardar cambios");
+		userService.save(userAux);
+		System.out.println("Nuevos datos de usuario guardados con éxito");
+		
+		return "profile";
+	}
+	
 	
 	@GetMapping("/getAllUsers")
 	public ResponseEntity<List<User>> getAllUsers(){
@@ -132,6 +205,27 @@ public class UserController {
 		userService.save(user);
 	}
 	
+	//------------------------------------------------------------------------------------
+	/*@RequestMapping(value = "/register", method=RequestMethod.GET)
+	public String register(Model model, HttpSession session) {
+		model.addAttribute("user", new User());
+		session.setAttribute("user", new User());
+		return "register";
+	}
+	 * Función para elegir entre empresa y cliente
+	@RequestMapping(value="/rolSelection", method=RequestMethod.POST)
+	public String rolSelection(@ModelAttribute("userRol") User user, Model model, BindingResult result, HttpSession session) {
+		System.out.println("Registro rol de usuario: "+user.getRol());
+		if(user.getRol()==0) {
+			System.out.println("Error: No se ha seleccionado una opción de rol válida en registro");
+			result.addError(new FieldError("user", "rol", "Debe seleccionar una opción válida"));
+		}
+		if(result.hasErrors())return "register";
+		model.addAttribute("user", user);
+		session.setAttribute("user", user);
+		return "register";
+	}
+	*/
 	
 	//------------------------------------------------------------------------------------
 	//Validación RUT

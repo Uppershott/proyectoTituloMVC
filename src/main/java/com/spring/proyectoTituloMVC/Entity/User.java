@@ -49,6 +49,12 @@ public class User implements Serializable{
 	@NotEmpty @NotNull
 	private String password;
 	
+	private String link1;
+	
+	private String link2;
+	
+	private String link3;
+	
 	//rol = 1, cliente. rol = 2, empresa
 	@Column(name="rol")
 	@NotNull
@@ -140,6 +146,30 @@ public class User implements Serializable{
 
 	public void setMisParticipaciones(List<Participation> misParticipaciones) {
 		this.misParticipaciones = misParticipaciones;
+	}
+
+	public String getLink1() {
+		return link1;
+	}
+
+	public void setLink1(String link1) {
+		this.link1 = link1;
+	}
+
+	public String getLink2() {
+		return link2;
+	}
+
+	public void setLink2(String link2) {
+		this.link2 = link2;
+	}
+
+	public String getLink3() {
+		return link3;
+	}
+
+	public void setLink3(String link3) {
+		this.link3 = link3;
 	}
 	
 	
