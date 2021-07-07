@@ -30,6 +30,10 @@ public class UserController {
 	
 	@GetMapping("/login.html")
 	public String login(Model model, HttpSession session){
+<<<<<<< Updated upstream
+=======
+		
+>>>>>>> Stashed changes
 		model.addAttribute("user", new User());
 		session.setAttribute("user", new User());
 		return "login";

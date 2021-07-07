@@ -21,10 +21,18 @@ public class WebController {
 		return "login";
 		return volverAInicio(model,session);*/
 		
+<<<<<<< Updated upstream
 		
 		
 		model.addAttribute("user", new User());
 		session.setAttribute("user", new User());
+=======
+		User user = new User();
+		user.setRol(1);
+		
+		model.addAttribute("user", user);
+		session.setAttribute("user", user);
+>>>>>>> Stashed changes
 		
 		return "index";
 	}
@@ -32,13 +40,18 @@ public class WebController {
 	@GetMapping("/index.html")
 	public String home(Model model, HttpSession session)
 	{
+		
 		User user = (User)session.getAttribute("user");
 		//User user = (User) model.getAttribute("user");
 		System.out.println("User en index: "+ user.getNombre());
 		if(user.getNombre() == null) {
-			model.addAttribute("user", new User());
-			session.setAttribute("user", new User());
+			User user2 = new User();
+			user2.setRol(1);
+			model.addAttribute("user", user2);
+			session.setAttribute("user", user2);
 		}else {
+			
+			
 			model.addAttribute("user", user);
 			session.setAttribute("user", user);
 		}

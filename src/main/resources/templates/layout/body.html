@@ -10,6 +10,7 @@
               <div class="sb-sidenav-menu">
                   <div class="nav">
                       <div class="sb-sidenav-menu-heading">Inicio</div>
+<<<<<<< Updated upstream
                       <a class="nav-link" href="index.html">
                           Ofertas!
                       </a>
@@ -19,6 +20,36 @@
                       <a class="nav-link" href="company.html">
                           Empresas
                       </a>
+=======
+	                  <span th:unless="${session.user.rol!=1}">
+	                      <a class="nav-link" href="index.html">
+	                          Ofertas!
+	                      </a>
+	                  </span>
+	                  <span th:if="${session.user.rol != 0}">
+	                      <a class="nav-link" href="events.html">
+	                          Eventos
+	                      </a>
+	                  </span>
+	                  <span th:if="${session.user.rol==2}">
+	                      <a class="nav-link" href="reports.html">
+	                          Informes
+	                      </a>
+	                   </span>
+	                   <span th:if="${session.user.rol==1}">
+	                      <a class="nav-link" href="company.html">
+	                          Empresas
+	                      </a>
+	                   </span>
+	                   <span th:if="${session.user.rol==0}">
+	                   		<a class="nav-link" href="usersAdmin.html">
+	                   			Usuarios
+	                   		</a>
+	                   		<a class="nav-link" href="eventsAdmin.html">
+	                   			Eventos
+	                   		</a>
+	                   </span>
+>>>>>>> Stashed changes
                   </div>
               </div>
               <div class="sb-sidenav-footer">
