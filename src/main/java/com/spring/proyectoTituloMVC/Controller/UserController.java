@@ -33,6 +33,8 @@ public class UserController {
 		
 		model.addAttribute("user1", new User());
 		session.setAttribute("user1", new User());
+		model.addAttribute("user", new User());
+		session.setAttribute("user", new User());
 		return "login";
 	}
 	

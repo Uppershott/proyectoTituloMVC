@@ -31,6 +31,15 @@ public class WebController {
 		model.addAttribute("user", new User());
 		session.setAttribute("user", new User());
 		
+		
+		model.addAttribute("user", new User());
+		session.setAttribute("user", new User());
+		User user = new User();
+		user.setRol(1);
+		
+		model.addAttribute("user", user);
+		session.setAttribute("user", user);
+		
 		return "index";
 	}
 	
