@@ -1,18 +1,26 @@
 package com.spring.proyectoTituloMVC.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.spring.proyectoTituloMVC.Entity.User;
+import com.spring.proyectoTituloMVC.Service.UserService;
 
 @Controller
 @Scope ("session")
 public class WebController {
-
+	
+	@Autowired
+	UserService userService;
+	
 	@GetMapping("/")
 	public String index(Model model, HttpSession session){
 		/*model.addAttribute("user", new User());
@@ -20,9 +28,6 @@ public class WebController {
 		
 		return "login";
 		return volverAInicio(model,session);*/
-		
-		
-		
 		model.addAttribute("user", new User());
 		session.setAttribute("user", new User());
 		
@@ -111,9 +116,61 @@ public class WebController {
 		}
 	}
 	
+	
+	
 	String volverAInicio(Model model, HttpSession session){
 		model.addAttribute("user", new User());
 		session.setAttribute("user", null);
 		return "login";
+	}
+	
+	
+	// -------------------------------------- Vistas de Administrador --------------------------------------------
+	@GetMapping("/indexAdmin.html")
+	public String indexAdmin(Model model, HttpSession session) {
+		User user = (User)session.getAttribute("user");
+		
+		model.addAttribute("user", user);
+		session.setAttribute("user", user);
+		System.out.println("User admin, agregado a session y model");
+		System.out.println("Redirigiendo a indexAdmin");
+		
+		return "indexAdmin";
+	}
+	
+	@GetMapping("/usersAdmin.html")
+	public String usersAdmin(Model model, HttpSession session) {
+		
+		cargar(model, session);
+		return "usersAdmin";
+	}
+	
+	@GetMapping("/eventsAdmin.html")
+	public String eventsAdmin(Model model, HttpSession session) {
+		return "eventsAdmin";
+	}
+	
+	public void cargar(Model model, HttpSession session) {
+		System.out.println("Iniciando carga lista de usuarios");
+		List<User> usersEnabled = new ArrayList<User>();
+		List<User> usersDisabled = new ArrayList<User>();
+		
+		List<User> myUsers = userService.getUsers();
+		System.out.println("Se guardaron usuarios en la lista myUsers");
+		
+		myUsers.remove(0);
+		System.out.println("Admin removido");
+		
+		for(int i=0; i<myUsers.size(); i++) {
+			if(myUsers.get(i).isHabilitado()) {
+				usersEnabled.add(myUsers.get(i));
+			}else {
+				usersDisabled.add(myUsers.get(i));
+			}
+		}
+		
+		model.addAttribute("myUsersListEnabled", usersEnabled);
+		model.addAttribute("myUsersListDisabled", usersDisabled);
+		System.out.println("Se agregaron atributos a model");
 	}
 }

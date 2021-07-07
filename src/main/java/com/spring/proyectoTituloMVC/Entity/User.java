@@ -55,7 +55,9 @@ public class User implements Serializable{
 	
 	private String link3;
 	
-	//rol = 1, cliente. rol = 2, empresa
+	private boolean habilitado;
+	
+	//rol = 1, cliente. rol = 2, empresa. rol = 0, administrador
 	@Column(name="rol")
 	@NotNull
 	private int rol;
@@ -170,6 +172,14 @@ public class User implements Serializable{
 
 	public void setLink3(String link3) {
 		this.link3 = link3;
+	}
+
+	public boolean isHabilitado() {
+		return habilitado;
+	}
+
+	public void setHabilitado(boolean habilitado) {
+		this.habilitado = habilitado;
 	}
 	
 	

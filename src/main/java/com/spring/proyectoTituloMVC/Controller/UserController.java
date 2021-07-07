@@ -30,8 +30,9 @@ public class UserController {
 	
 	@GetMapping("/login.html")
 	public String login(Model model, HttpSession session){
-		model.addAttribute("user", new User());
-		session.setAttribute("user", new User());
+		
+		model.addAttribute("user1", new User());
+		session.setAttribute("user1", new User());
 		return "login";
 	}
 	
@@ -109,11 +110,21 @@ public class UserController {
 			result.addError(new FieldError("user", "password", "Contraseña incorrecta"));
 		}else if(user.getCorreo().equals(userService.getUserByCorreo(user.getCorreo()).getCorreo())) {
 			User userAux = userService.getUserByCorreo(user.getCorreo());	
-			System.out.println("Numero de telefono: "+ userAux.getTelefono());
-			session.setAttribute("user", userAux);
-			System.out.println("Agregado user: "+userAux.getNombre()+" a session...");
-			model.addAttribute("user", userAux);
-			System.out.println("Agregado user: "+userAux.getNombre()+" a model...");
+			
+			if(!userAux.isHabilitado()) {
+				System.out.println("Error: Usuario baneado/deshabilitado");
+				result.addError(new FieldError("user", "habilitado", "El Usuario se encuentra vetado"));
+			}else {
+				session.setAttribute("user", userAux);
+				System.out.println("Agregado user: "+userAux.getNombre()+" a session...");
+				model.addAttribute("user", userAux);
+				System.out.println("Agregado user: "+userAux.getNombre()+" a model...");
+				
+				//Si el rol es de administrador
+				if(userAux.getRol()==0) {
+					return "indexAdmin";
+				}
+			}
 		}
 		
 		if(result.hasErrors()) return "login";
