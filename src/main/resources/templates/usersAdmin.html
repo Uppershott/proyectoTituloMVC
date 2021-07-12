@@ -8,6 +8,7 @@
         <meta name="author" content="" />
         <title>Emprendimientos Ya!</title>
         <link href="css/styles.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -28,7 +29,8 @@
 	                                            <th>Nombre</th>
 	                                            <th>Correo</th>
 	                                            <th>Telefono</th>
-	                                            <th>Deshabilitar</th>
+	                                            <th>Tipo de cuenta</th>
+	                                            <th></th>
 	                                        </tr>
 	                                    </thead>
 	                                    <tbody>
@@ -36,7 +38,9 @@
 	                                    		<td th:text="${usrs.nombre}"/>
 	                                    		<td th:text="${usrs.correo}"/>
 	                                    		<td th:text="${usrs.telefono}"/>
-	                                    		<td></td>
+	                                    		<td th:if="${usrs.rol==1}">Cliente</td>
+	                                    		<td th:if="${usrs.rol==2}">Empresa</td>
+	                                    		<td><a th:href="|@{/disableUser/{id}(id=${usrs.idCliente})}|"><i class="material-icons">remove</i></a></td>
 	                                    	</tr>
 	                                    </tbody>
 	                                </table>
@@ -53,7 +57,8 @@
 	                                            <th>Nombre</th>
 	                                            <th>Correo</th>
 	                                            <th>Telefono</th>
-	                                            <th>Habilitar</th>
+	                                            <th>Tipo de cuenta</th>
+	                                            <th></th>
 	                                        </tr>
 	                                    </thead>
 	                                    <tbody>
@@ -61,7 +66,9 @@
 	                                    		<td th:text="${usrs.nombre}"/>
 	                                    		<td th:text="${usrs.correo}"/>
 	                                    		<td th:text="${usrs.telefono}"/>
-	                                    		<td></td>
+	                                    		<td th:if="${usrs.rol==1}">Cliente</td>
+	                                    		<td th:if="${usrs.rol==2}">Empresa</td>
+	                                    		<td><a th:href="|@{/enableUser/{id}(id=${usrs.idCliente})}|"><i class="material-icons">add</i></a></td>
 	                                    	</tr>
 	                                    </tbody>
 	                                </table>

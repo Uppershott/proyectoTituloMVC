@@ -118,11 +118,26 @@
 		                                            		</div>
 		                                            	</div>
 		                                            </div>
-		                                            <div class="form-group">
-		                                            	<label class="small mb-1" for="inputEmailAddress">*Correo de la Empresa</label>
-		                                            	<input class="form-control py-4" type="email" th:field="*{correo}" name="emailUserRegister" placeholder="Ej. nombre@dominio.com" required/>
+		                                            <div class="form-row">
+		                                            	<div class="col-md-6">
+				                                            <div class="form-group">
+				                                            	<label class="small mb-1" for="inputEmailAddress">*Correo de la Empresa</label>
+				                                            	<input class="form-control py-4" type="email" th:field="*{correo}" name="emailUserRegister" placeholder="Ej. nombre@dominio.com" required/>
+				                                            </div>
+			                                            </div>
+			                                            <div class="col-md-6">
+			                                            	<div class="form-group">
+			                                            		<label class="small mb-1" for="inputRubro">*Rubro</label>
+			                                            		<select th:field="*{rubro}" class="form-control" name="rubroSelection" id="rubroSelection" required>
+			                                            			<option value="5" selected>Otro</option>
+			                                            			<option value="1">Restaurante</option>
+			                                            			<option value="2">Cafetería</option>
+			                                            			<option value="3">Delivery</option>
+			                                            			<option value="4">Negocio pequeño</option>
+			                                            		</select>
+			                                            	</div>
+			                                            </div>
 		                                            </div>
-		                                            
 		                                            <div class="form-group">
 		                                                <label class="small mb-1" for="inputAddress">*Dirección de la Empresa</label>
 		                                                <input class="form-control py-4" type="text" th:field="*{direccion}" name="addressUserRegister" required maxlength="200" placeholder="Ej. Ciudad, Calle, Número" />

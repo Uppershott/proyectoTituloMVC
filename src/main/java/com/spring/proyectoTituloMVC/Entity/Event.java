@@ -46,11 +46,18 @@ public class Event implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date fechaTermino;
 	
+	//posible a salir de acá
 	@Column (name="detalle")
 	private String detalle;
 	
+	
 	@Column (name="precio")
 	private Double precio;
+	
+	@Column (name="cantidad")
+	private int cantidad;
+	
+	private boolean habilitado;
 	
 	//relación bi-direccional con User rol empresa
 	@ManyToOne
@@ -152,6 +159,13 @@ public class Event implements Serializable {
 	public void setMisPlatillos(List<Contain> misPlatillos) {
 		this.misPlatillos = misPlatillos;
 	}
-	
+
+	public boolean isHabilitado() {
+		return habilitado;
+	}
+
+	public void setHabilitado(boolean habilitado) {
+		this.habilitado = habilitado;
+	}
 	
 }

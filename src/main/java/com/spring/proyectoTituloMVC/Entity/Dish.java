@@ -29,6 +29,8 @@ public class Dish implements Serializable{
 	@Column(name="descripcion")
 	private String descripcion;
 	
+	private boolean selected;
+	
 	//relacion bi-direccional con Event. Un platillo puede estar en muchos eventos.
 	@OneToMany(mappedBy="platilloContener")
 	private List<Contain> misEventos;
@@ -63,6 +65,14 @@ public class Dish implements Serializable{
 
 	public void setMisEventos(List<Contain> misEventos) {
 		this.misEventos = misEventos;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 	
 	

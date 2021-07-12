@@ -31,8 +31,6 @@ public class UserController {
 	@GetMapping("/login.html")
 	public String login(Model model, HttpSession session){
 		
-		model.addAttribute("user1", new User());
-		session.setAttribute("user1", new User());
 		model.addAttribute("user", new User());
 		session.setAttribute("user", new User());
 		return "login";
@@ -62,6 +60,7 @@ public class UserController {
 		if(result.hasErrors()) return "register";
 				
 		user.setRol(1);
+		user.setHabilitado(true);
 		System.out.println(user.getNombre()+" "+user.getPassword());
 		userService.save(user);
 		model.addAttribute("user", user);
@@ -88,11 +87,15 @@ public class UserController {
 		}else if(!isValid(user.getRut())) {
 			System.out.println("Error: el RUT ingresado no es válido");
 			result.addError(new FieldError("user", "rut", "El RUT ingresado no es válido!"));
+		}else if(user.getRubro()==0) {
+			System.out.println("Error: Debe seleccionar un rubro!");
+			result.addError(new FieldError("user", "rubro", "Debe seleccionar un rubro!"));
 		}
 		
 		if(result.hasErrors()) return "register";
 				
 		user.setRol(2);
+		user.setHabilitado(true);
 		System.out.println(user.getNombre()+" "+user.getPassword());
 		userService.save(user);
 		model.addAttribute("user", user);
@@ -180,6 +183,36 @@ public class UserController {
 		System.out.println("Nuevos datos de usuario guardados con éxito");
 		
 		return "profile";
+	}
+	
+	@GetMapping("/disableUser/{id}")
+	public String disableUser(@PathVariable(value="id") String id, Model model, HttpSession session) {
+		System.out.println("Entrando a disableUser");
+		
+		User userAux = userService.getUserById(Integer.parseInt(id));
+		userAux.setHabilitado(false);
+		
+		System.out.println("Usuario: "+ userAux.getNombre()+" deshabilitado...");
+		
+		userService.save(userAux);
+		
+		System.out.println("Terminando disableUser...");
+		return "redirect:/usersAdmin.html";
+	}
+	
+	@GetMapping("/enableUser/{id}")
+	public String enableUser(@PathVariable(value="id") String id, Model model, HttpSession session) {
+		System.out.println("Entrando a enableUser");
+		
+		User userAux = userService.getUserById(Integer.parseInt(id));
+		userAux.setHabilitado(true);
+		
+		System.out.println("Usuario: "+ userAux.getNombre()+" habilitado...");
+		
+		userService.save(userAux);
+		
+		System.out.println("Terminando enableUser...");
+		return "redirect:/usersAdmin.html";
 	}
 	
 	

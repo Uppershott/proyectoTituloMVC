@@ -55,6 +55,9 @@ public class User implements Serializable{
 	
 	private String link3;
 	
+	//1: Restaurant, 2: Cafetería, 3: Delivery, 4: Negocio Pequeño, 5: Otros.
+	private int rubro;
+	
 	private boolean habilitado;
 	
 	//rol = 1, cliente. rol = 2, empresa. rol = 0, administrador
@@ -181,6 +184,13 @@ public class User implements Serializable{
 	public void setHabilitado(boolean habilitado) {
 		this.habilitado = habilitado;
 	}
-	
+
+	public int getRubro() {
+		return rubro;
+	}
+
+	public void setRubro(int rubro) {
+		this.rubro = rubro;
+	}
 	
 }

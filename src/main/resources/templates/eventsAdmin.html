@@ -30,11 +30,19 @@
 	                                            <th>Empresa</th>
 	                                            <th>Fecha de Inicio</th>
 	                                            <th>Fecha de Término</th>
+	                                            <th>Precio</th>
 	                                            <th>Pedidos Disp.</th>
 	                                        </tr>
 	                                    </thead>
 	                                    <tbody>
-	                                    	<tr>
+	                                    	<tr th:each="events: ${myEventsListEnabled}">
+	                                    		<td th:text="${events.nombre}"/>
+	                                    		<td th:text="${events.descripcion}"/>
+	                                    		<td th:text="${events.empresa.nombre}"/>
+	                                    		<td th:text="${events.fechaInicio}"/>
+	                                    		<td th:text="${events.fechaTermino}"/>
+	                                    		<td th:text="${events.precio}"/>
+	                                    		<td th:text="${events.cantidad}"/>
 	                                    	</tr>
 	                                    </tbody>
 	                                    <tbody>

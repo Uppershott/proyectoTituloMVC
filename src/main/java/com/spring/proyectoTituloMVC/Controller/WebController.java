@@ -12,6 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.spring.proyectoTituloMVC.Entity.User;
+import com.spring.proyectoTituloMVC.Entity.Dish;
+import com.spring.proyectoTituloMVC.Entity.Event;
+import com.spring.proyectoTituloMVC.Service.DishService;
+import com.spring.proyectoTituloMVC.Service.EventService;
 import com.spring.proyectoTituloMVC.Service.UserService;
 
 @Controller
@@ -21,19 +25,15 @@ public class WebController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	EventService eventService;
+	
+	@Autowired
+	DishService dishService;
+	
 	@GetMapping("/")
 	public String index(Model model, HttpSession session){
-		/*model.addAttribute("user", new User());
-		session.setAttribute("user", new User());
 		
-		return "login";
-		return volverAInicio(model,session);*/
-		model.addAttribute("user", new User());
-		session.setAttribute("user", new User());
-		
-		
-		model.addAttribute("user", new User());
-		session.setAttribute("user", new User());
 		User user = new User();
 		user.setRol(1);
 		
@@ -50,8 +50,9 @@ public class WebController {
 		//User user = (User) model.getAttribute("user");
 		System.out.println("User en index: "+ user.getNombre());
 		if(user.getNombre() == null) {
-			model.addAttribute("user", new User());
-			session.setAttribute("user", new User());
+			user.setRol(1);
+			model.addAttribute("user", user);
+			session.setAttribute("user", user);
 		}else {
 			model.addAttribute("user", user);
 			session.setAttribute("user", user);
@@ -66,29 +67,40 @@ public class WebController {
 		
 		//model.addAttribute("userEdit", new User());
 		//session.setAttribute("userEdit", new User());
-		
-		return "profile";
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			return "profile";
+		}
 	}
 	
 	@GetMapping("/profileEdit.html")
 	public String profileEdit(Model model, HttpSession session) {
-		System.out.println("WebController profileEdit");
-		model.addAttribute("userEdit", new User());
-		session.setAttribute("userEdit", new User());
-		System.out.println("profileEdit - Agregado userEdit a model y session");
-		return "profileEdit";
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			System.out.println("WebController profileEdit");
+			model.addAttribute("userEdit", new User());
+			session.setAttribute("userEdit", new User());
+			System.out.println("profileEdit - Agregado userEdit a model y session");
+			
+			return "profileEdit";
+		}
 	}
 	
 	//nuevo
 	@GetMapping("/myOrders.html")
 	public String myOrders(Model model, HttpSession session) {
-		return "myOrders";
-	}
-	
-	//nuevo
-	@GetMapping("/myEvents.html")
-	public String myEvents(Model model, HttpSession session) {
-		return "myEvents";
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			return "myOrders";
+		}
 	}
 	
 	@GetMapping("/register.html")
@@ -125,20 +137,81 @@ public class WebController {
 		}
 	}
 	
+	//--------------------------------Vistas Eventos--------------------------------
 	
-	
-	String volverAInicio(Model model, HttpSession session){
-		model.addAttribute("user", new User());
-		session.setAttribute("user", null);
-		return "login";
+	@GetMapping("/myEvents.html")
+	public String myEvents(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			List<Dish> allDishes = dishService.getAllDishes();
+			for(int i=0; i<allDishes.size(); i++) {
+				allDishes.get(i).setSelected(false);
+				dishService.save(allDishes.get(i));
+			}
+			/*Dish dish = new Dish();
+			dish.setNombre("Tallarines con salsa roja");
+			dish.setDescripcion("Tallarines al dente con salsa roja");
+			dish.setSelected(false);
+			
+			Dish dish1 = new Dish();
+			dish1.setNombre("Cazuela de vacuno");
+			dish1.setDescripcion("Caldo de res");
+			dish1.setSelected(true);
+			
+			dishService.save(dish1);
+			dishService.save(dish);*/
+			System.out.println("Agregados platllos por defecto...");
+			return "myEvents";
+		}
 	}
 	
+	@GetMapping("/eventCreate.html")
+	public String eventCreate(Model model, HttpSession session) {
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getRol()!=2) {
+			return "401";
+		}else {
+			
+			model.addAttribute("newDish", new Dish());
+			model.addAttribute("dish", new Dish());
+			session.setAttribute("newDish", new Dish());
+			session.setAttribute("dish", new Dish());
+			loadDishes(model, session);
+			
+			System.out.println("Agregado dish y newDish a model y cargadas las listas...");
+			return "eventCreate";
+		}
+	}
+	
+	public void loadDishes(Model model, HttpSession session) {
+		System.out.println("Iniciando carga de platillos...");
+		List<Dish> dishes = dishService.getAllDishes();
+		System.out.println("Se han cargado los platillos en dishes...");
+		
+		List<Dish> dishesSelected = new ArrayList<Dish>();
+		List<Dish> dishesUnselected = new ArrayList<Dish>();
+		
+		for(int i=0; i<dishes.size();i++) {
+			if(dishes.get(i).isSelected()) {
+				dishesSelected.add(dishes.get(i));
+			}else {
+				dishesUnselected.add(dishes.get(i));
+			}
+		}
+		
+		model.addAttribute("dishesUnselected", dishesUnselected);
+		model.addAttribute("dishesSelected", dishesSelected);
+		System.out.println("Se agregó dishesSelected y dishesUnselected a model...");
+	}
 	
 	// -------------------------------------- Vistas de Administrador --------------------------------------------
 	@GetMapping("/indexAdmin.html")
 	public String indexAdmin(Model model, HttpSession session) {
 		User user = (User)session.getAttribute("user");
-		
+		if(user.getRol()!=0) return "401";
 		model.addAttribute("user", user);
 		session.setAttribute("user", user);
 		System.out.println("User admin, agregado a session y model");
@@ -149,17 +222,26 @@ public class WebController {
 	
 	@GetMapping("/usersAdmin.html")
 	public String usersAdmin(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if(user.getRol()!=0) return "401";
 		
-		cargar(model, session);
+		loadUsers(model, session);
 		return "usersAdmin";
 	}
 	
 	@GetMapping("/eventsAdmin.html")
 	public String eventsAdmin(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if(user.getRol()!=0) return "401";
+		
+		System.out.println("Cargando Eventos a indexAdmin...");
+		loadEvents(model, session);
+		System.out.println("Eventos cargados a indexAdmin...");
+		
 		return "eventsAdmin";
 	}
 	
-	public void cargar(Model model, HttpSession session) {
+	public void loadUsers(Model model, HttpSession session) {
 		System.out.println("Iniciando carga lista de usuarios");
 		List<User> usersEnabled = new ArrayList<User>();
 		List<User> usersDisabled = new ArrayList<User>();
@@ -182,4 +264,46 @@ public class WebController {
 		model.addAttribute("myUsersListDisabled", usersDisabled);
 		System.out.println("Se agregaron atributos a model");
 	}
+	
+	public void loadEvents(Model model, HttpSession session) {
+		System.out.println("Iniciando carga lista de eventos");
+		List<Event> eventsEnabled = new ArrayList<Event>();
+		List<Event> eventsDisabled = new ArrayList<Event>();
+		
+		List<Event> myEvents = eventService.getAllEvents();
+		System.out.println("Se guardaron eventos en la lista myEvents");
+		
+		for(int i=0; i<myEvents.size(); i++) {
+			if(myEvents.get(i).isHabilitado()) {
+				eventsEnabled.add(myEvents.get(i));
+			}else {
+				eventsDisabled.add(myEvents.get(i));
+			}
+		}
+		
+		model.addAttribute("myEventsListEnabled", eventsEnabled);
+		model.addAttribute("myEventsListDisabled", eventsDisabled);
+		System.out.println("Se agregaron atributos a model");
+	}
+	
+	/* Otra forma de deshabilitar usuarios con RequestMapping en vez de GetMapping
+	 @RequestMapping(value="/disableUser/{id}", method = RequestMethod.GET)
+	public String disableUser(@PathVariable (value="id") String id, Model model, HttpSession session) {
+		
+		//System.out.println("Usuario: "+user.getNombre()+" id: "+user.getIdCliente());
+		
+		System.out.println("Entrando a disableUser");
+		
+		User userAux = userService.getUserById(Integer.parseInt(id));
+		userAux.setHabilitado(false);
+		
+		System.out.println("Usuario: "+ userAux.getNombre()+" deshabilitado...");
+		
+		userService.save(userAux);
+		
+		System.out.println("Terminando disableUser...");
+		return "redirect:/usersAdmin.html";
+	} 
+	*/
+	
 }
