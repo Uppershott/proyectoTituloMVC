@@ -8,6 +8,7 @@
         <meta name="author" content="" />
         <title>Emprendimientos Ya!</title>
         <link href="css/styles.css" rel="stylesheet" />
+        <link href="css/tableStyle.css" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="css/profileStyle.css" rel="stylesheet" />
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
@@ -23,49 +24,70 @@
 						<div class="row justify-content-center">
                             <div class="col-lg-7">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Selecciona los platillos a agregar al evento</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Completa los datos del evento</h3></div>
 	                                   	<div class="card-body">
                                         	<div align=center class="form-group">
-                                            	<div class="col-md-6">
-	                                        		<div class="form-group">
-	                                        			<form action="addDishEvent" th:action="@{addDishEvent}" th:object="${dish}" metod="post">
-		                                            		<label class="small mb-1" for="inputRol">*Seleccione un platillo</label>
-		                                                	<select th:field="*{id}" class="form-control" name="rolUserSelection" id="rol">
-		                                                		<option value="" selected disabled>Seleccione un Platillo...</option>
-		                                                		<option th:each="dishes: ${dishesUnselected}" th:value="${dishes.id}" th:text="${dishes.nombre}"></option>
-		                                                	</select>
-		                                                	<button type="submit" class="btn btn-primary btn-block">Agregar a evento</button>
-	                                                	</form>
-	                                            	</div>
-                                            	</div>
-                                            	<table class="table table-bordered" id="dataTable" width="25%" cellspacing="0">
+                                        		
+                                            	<table cellpadding="0"  id="example" name="dataTable" width="85%">
 				                                    <thead>
 				                                        <tr>
 				                                            <th>Nombre</th>
 				                                            <th>Descripción</th>
-				                                            <th></th>
 				                                        </tr>
 				                                    </thead>
 				                                    <tbody>
 				                                    	<tr th:each="dishesSelected: ${dishesSelected}">
 				                                    		<td th:text="${dishesSelected.nombre}"/>
 				                                    		<td th:text="${dishesSelected.descripcion}"/>
-				                                    		<td><a th:href="|@{/removeDish/{id}(id=${dishesSelected.id})}|"><i class="material-icons">remove</i></a></td>
 				                                    	</tr>
 				                                    </tbody>
 				                                </table>
-				                                <div class="form-row">
-		                                            <div class="col-md-6">
-			                                            <div class="form-group mt-4 mb-0">
-			                                            	<button class="btn btn-primary btn-block" onClick="myEvents.html">Cancelar</button>
-			                                            </div>
+				                                <form action="addEvent" th:action="@{/addEvent}" th:object="${event}" method="post">
+				                                	<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+		    											<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+				  									</div>
+				  									<div class="form-group">
+		                                                <label class="small mb-1" for="inputName">*Nombre del evento</label>
+		                                                <input class="form-control py-4"  type="text" th:field="*{nombre}" name="nameEventRegister" maxlength="100" placeholder="Ej: Sabathon de pastas" required/>
+		                                    		</div>
+		                                    		<div class="form-group">
+		                                                <label class="small mb-1" for="inputDescription">*Descripción</label>
+		                                                <input class="form-control py-4"  type="text" th:field="*{descripcion}" name="descriptionEventRegister" maxlength="400" placeholder="Ej: Se celebrará con pastas de todo tipo" required/>
+		                                    		</div>
+		                                            <div class="form-row">
+		                                            	<div class="col-md-4">
+		                                            		<div class="form-group">
+		                                                		<label class="small mb-1" for="inputDate">*Fecha de término</label>
+		                                               			<input class="form-control py-4"  type="date" th:field="*{fechaTermino}" name="dateEventRegister" required/>
+		                                        			</div>
+		                                            	</div>
+		                                                <div class="col-md-4">
+		                                                	<div class="form-group">
+		                                               			<label class="small mb-1" for="inputCantidad">*Cantidad de pedidos</label>
+		                                                		<input class="form-control py-4"  type="number" th:field="*{cantidad}" name="cantidadEventRegister" required/>
+		                                            		</div>
+		                                            	</div>
+		                                            	<div class="col-md-4">
+		                                                	<div class="form-group">
+		                                               			<label class="small mb-1" for="inputPrice">*Precio del evento</label>
+		                                                		<input class="form-control py-4"  type="number" th:field="*{precio}" name="priceEventRegister" required/>
+		                                            		</div>
+		                                            	</div>
+		                                            </div>
+		                                            
+		                                            <div class="form-row">
+			                                            <div class="col-md-6">
+				                                            <div class="form-group mt-4 mb-0">
+				                                            	<button type="submit" class="btn btn-primary btn-block" onClick="location.href='myEvents.html'">Cancelar</button>
+				                                            </div>
+				                                        </div>
+				                                        <div class="col-md-6">
+				                                            <div class="form-group mt-4 mb-0">
+				                                            	<button type="submit" class="btn btn-primary btn-block">Crear Evento</button>
+				                                            </div>
+				                                        </div>
 			                                        </div>
-			                                        <div class="col-md-6">
-			                                            <div class="form-group mt-4 mb-0">
-			                                            	<button onClick="eventCreateForm.html" class="btn btn-primary btn-block">Continuar</button>
-			                                            </div>
-			                                        </div>
-		                                        </div>
+	                                        </form>
                                    			</div>
 	                               	 	</div>
 	                           	 	</div>
@@ -78,6 +100,13 @@
 	         </div>
 	         
 	     </div>
+	     <script>
+			$(document).ready(function() {
+			$('table#example').DataTable({
+  			  
+	   		 "searching": false });
+			});
+		</script>
 	     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>

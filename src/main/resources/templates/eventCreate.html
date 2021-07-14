@@ -31,14 +31,16 @@
                                             	<div class="col-md-6">
 	                                        		<div class="form-group">
 	                                        			<form action="addDishEvent" th:action="@{addDishEvent}" th:object="${dish}" method="post">
-		                                            		<label class="small mb-1" for="inputRol">*Seleccione un platillo</label>
-		                                                	<select th:field="*{id}" class="form-control" name="rolUserSelection" id="rol">
-		                                                		<option value="1000" selected disabled>Seleccione un Platillo...</option>
-		                                                		<option th:each="dishesUnselected: ${dishesUnselected}" 
-		                                                				th:value="${dishesUnselected.id}" 
-		                                                				th:text="${dishesUnselected.nombre}"></option>
-		                                                	</select>
-		                                                	<button  class="btn btn-primary btn-block" type="submit">Agregar a evento</button>
+		  													<span th:if="${!dishesUnselected.isEmpty()}" >
+			                                            		<label class="small mb-1" for="inputRol">*Seleccione uno o más platillos para su evento</label>
+			                                                	<select th:field="*{id}" class="form-control" name="rolUserSelection" id="rol" required>
+			                                                		<option th:each="dishesUnselected: ${dishesUnselected}" 
+			                                                				th:value="${dishesUnselected.id}" 
+			                                                				th:text="${dishesUnselected.nombre}"></option>
+			                                                	</select>
+			                                                	<button  class="btn btn-primary btn-block" type="submit">Agregar a evento</button>
+		                                                	</span>
+		                                                	<label th:if="${dishesUnselected.isEmpty()}" class="small mb-1" for="inputRol">No quedan platillos</label>
 	                                                	</form>
 	                                            	</div>
                                             	</div>
@@ -55,9 +57,11 @@
 				                                    		<td th:text="${dishesSelected.nombre}"/>
 				                                    		<td th:text="${dishesSelected.descripcion}"/>
 				                                    		<td><a th:href="|@{/removeDish/{id}(id=${dishesSelected.id})}|"><i class="material-icons">remove</i></a></td>
+				                                    		
 				                                    	</tr>
 				                                    </tbody>
 				                                </table>
+				                                <label th:if="${dishesSelected.isEmpty()}" class="small mb-1" for="inputRol">Debe agregar platillos al evento para continuar</label>
 				                                <div class="form-row">
 		                                            <div class="col-md-4">
 			                                            <div class="form-group mt-4 mb-0">
@@ -84,7 +88,7 @@
 			                                        </div>
 			                                        <div class="col-md-4">
 			                                            <div class="form-group mt-4 mb-0">
-			                                            	<button onClick="eventCreateForm.html" class="btn btn-primary btn-block">Continuar</button>
+			                                            	<button th:if="${!dishesSelected.isEmpty()}" onClick="location.href='eventCreateForm.html'" class="btn btn-primary btn-block">Continuar</button>
 			                                            </div>
 			                                        </div>
 		                                        </div>

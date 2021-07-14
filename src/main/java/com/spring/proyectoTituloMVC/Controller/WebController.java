@@ -33,7 +33,6 @@ public class WebController {
 	
 	@GetMapping("/")
 	public String index(Model model, HttpSession session){
-		
 		User user = new User();
 		user.setRol(1);
 		
@@ -115,16 +114,7 @@ public class WebController {
 		return "register";
 	}
 	
-	@GetMapping("/events.html")
-	public String events(Model model, HttpSession session) {
-		
-		User user = (User) session.getAttribute("user");
-		if(user.getNombre()==null) {
-			return "401";
-		}else {
-			return "events";
-		}
-	}
+	
 	
 	@GetMapping("/company.html")
 	public String company(Model model, HttpSession session) {
@@ -139,30 +129,35 @@ public class WebController {
 	
 	//--------------------------------Vistas Eventos--------------------------------
 	
+	@GetMapping("/events.html")
+	public String events(Model model, HttpSession session) {
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			
+			loadEvents(model,session);
+			return "events";
+		}
+	}
+	
 	@GetMapping("/myEvents.html")
 	public String myEvents(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		if(user.getNombre()==null) {
 			return "401";
 		}else {
-			List<Dish> allDishes = dishService.getAllDishes();
+			/*List<Dish> allDishes = dishService.getAllDishes();
 			for(int i=0; i<allDishes.size(); i++) {
 				allDishes.get(i).setSelected(false);
 				dishService.save(allDishes.get(i));
 			}
-			/*Dish dish = new Dish();
-			dish.setNombre("Tallarines con salsa roja");
-			dish.setDescripcion("Tallarines al dente con salsa roja");
-			dish.setSelected(false);
 			
-			Dish dish1 = new Dish();
-			dish1.setNombre("Cazuela de vacuno");
-			dish1.setDescripcion("Caldo de res");
-			dish1.setSelected(true);
+			System.out.println("Agregados platllos por defecto...");*/
 			
-			dishService.save(dish1);
-			dishService.save(dish);*/
-			System.out.println("Agregados platllos por defecto...");
+			loadMyEvents(model,session);
+			unselectDishes(model,session);
 			return "myEvents";
 		}
 	}
@@ -180,10 +175,22 @@ public class WebController {
 			session.setAttribute("newDish", new Dish());
 			session.setAttribute("dish", new Dish());
 			loadDishes(model, session);
+			unselectDishes(model,session);
 			
 			System.out.println("Agregado dish y newDish a model y cargadas las listas...");
 			return "eventCreate";
 		}
+	}
+	
+	@GetMapping("/eventCreateForm.html")
+	public String eventCreateForm(Model model, HttpSession session) {
+		System.out.println("Ingresando a eventCreateForm...");
+		
+		loadDishes(model, session);
+		model.addAttribute("event", new Event());
+		System.out.println("Agregados dishesSelected y event a model y redirigiendo a eventCreateForm...");
+		
+		return "eventCreateForm";
 	}
 	
 	public void loadDishes(Model model, HttpSession session) {
@@ -205,6 +212,34 @@ public class WebController {
 		model.addAttribute("dishesUnselected", dishesUnselected);
 		model.addAttribute("dishesSelected", dishesSelected);
 		System.out.println("Se agregó dishesSelected y dishesUnselected a model...");
+	}
+
+	public void loadMyEvents(Model model, HttpSession session) {
+		System.out.println("Iniciando carga de mis eventos...");
+		
+		List <Event> allEvents = eventService.getAllEvents();
+		List <Event> myActiveEvents = new ArrayList<Event>();
+		List<Event> myInactiveEvents = new ArrayList<Event>();
+		
+		User me = (User) session.getAttribute("user");
+		System.out.println("Id de la empresa: "+me.getIdCliente());
+		
+		for(int i=0; i<allEvents.size();i++) {
+			if(allEvents.get(i).getEmpresa().getIdCliente()==me.getIdCliente()) {
+				if(allEvents.get(i).isHabilitado()) {
+					myActiveEvents.add(allEvents.get(i));
+					System.out.println("Evento: "+ allEvents.get(i).getNombre()+" agregado a myActiveEvents");
+				}else {
+					myInactiveEvents.add(allEvents.get(i));
+					System.out.println("Evento: "+allEvents.get(i).getNombre()+" agregado a myInactiveEvents");
+				}
+			}
+		}
+		
+		model.addAttribute("myActiveEvents", myActiveEvents);
+		model.addAttribute("myInactiveEvents", myInactiveEvents);
+		System.out.println("Se agregó myActiveEvents con un total de "+ myActiveEvents.size()+" eventos a model...");
+		System.out.println("Se agregó myInactiveEvents con un total de "+ myInactiveEvents.size()+" eventos a model...");
 	}
 	
 	// -------------------------------------- Vistas de Administrador --------------------------------------------
@@ -284,6 +319,14 @@ public class WebController {
 		model.addAttribute("myEventsListEnabled", eventsEnabled);
 		model.addAttribute("myEventsListDisabled", eventsDisabled);
 		System.out.println("Se agregaron atributos a model");
+	}
+	
+	public void unselectDishes(Model model, HttpSession session) {
+		List<Dish> dishes = dishService.getAllDishes();
+		for(int i=0; i<dishes.size();i++) {
+			dishes.get(i).setSelected(false);
+			dishService.save(dishes.get(i));
+		}
 	}
 	
 	/* Otra forma de deshabilitar usuarios con RequestMapping en vez de GetMapping

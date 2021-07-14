@@ -2,6 +2,7 @@ package com.spring.proyectoTituloMVC.Entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,11 +26,11 @@ public class Contain implements Serializable{
 	@Column(name="id")
 	private int id;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="idPlatillo")
 	private Dish platilloContener;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="idEvento")
 	private Event eventoContener;
 

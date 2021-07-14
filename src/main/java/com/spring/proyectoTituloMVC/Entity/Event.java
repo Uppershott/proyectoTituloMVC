@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @NamedQuery(name="Event.findAll", query="SELECT e FROM Event e")
@@ -35,6 +38,7 @@ public class Event implements Serializable {
 	private String descripcion;
 	
 	@Column (name="fechaCreacion")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date fechaCreacion;
 	
@@ -43,8 +47,9 @@ public class Event implements Serializable {
 	private Date fechaInicio;
 	
 	@Column (name="fechaTermino")
-	@Temporal(TemporalType.DATE)
-	private Date fechaTermino;
+	//@DateTimeFormat(pattern = "dd/MM/yyyy")
+	//@Temporal(TemporalType.DATE)
+	private String fechaTermino;
 	
 	//posible a salir de acá
 	@Column (name="detalle")
@@ -60,16 +65,16 @@ public class Event implements Serializable {
 	private boolean habilitado;
 	
 	//relación bi-direccional con User rol empresa
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn (name="idEmpresa", nullable=false)
 	private User empresa;
 	
 	//relación bi-direccional con User rol cliente. A un Evento participan muchos Clientes
-	@OneToMany(mappedBy="evento")
+	@OneToMany(mappedBy="evento", cascade = {CascadeType.ALL})
 	private List<Participation> misParticipantes;
 	
 	//relación bi-direccional con Dish. Un Evento puede contener muchos platillos.
-	@OneToMany(mappedBy="eventoContener")
+	@OneToMany(mappedBy="eventoContener", cascade = {CascadeType.ALL})
 	private List<Contain> misPlatillos;
 
 	public int getIdEvent() {
@@ -112,11 +117,11 @@ public class Event implements Serializable {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Date getFechaTermino() {
+	public String getFechaTermino() {
 		return fechaTermino;
 	}
 
-	public void setFechaTermino(Date fechaTermino) {
+	public void setFechaTermino(String fechaTermino) {
 		this.fechaTermino = fechaTermino;
 	}
 
@@ -167,5 +172,12 @@ public class Event implements Serializable {
 	public void setHabilitado(boolean habilitado) {
 		this.habilitado = habilitado;
 	}
-	
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
 }
