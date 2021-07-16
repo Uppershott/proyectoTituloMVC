@@ -62,6 +62,8 @@ public class Event implements Serializable {
 	@Column (name="cantidad")
 	private int cantidad;
 	
+	private int cantidadDisp;
+	
 	private boolean habilitado;
 	
 	//relación bi-direccional con User rol empresa
@@ -180,4 +182,14 @@ public class Event implements Serializable {
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
+
+	public int getCantidadDisp() {
+		return cantidadDisp;
+	}
+
+	public void setCantidadDisp(int cantidadDisp) {
+		this.cantidadDisp = cantidadDisp;
+	}
+	
+	
 }

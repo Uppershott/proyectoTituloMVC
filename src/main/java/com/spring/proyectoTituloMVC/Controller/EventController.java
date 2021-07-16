@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.spring.proyectoTituloMVC.Entity.Contain;
 import com.spring.proyectoTituloMVC.Entity.Dish;
 import com.spring.proyectoTituloMVC.Entity.Event;
+import com.spring.proyectoTituloMVC.Entity.Participation;
 import com.spring.proyectoTituloMVC.Entity.User;
 import com.spring.proyectoTituloMVC.Service.ContainService;
 import com.spring.proyectoTituloMVC.Service.DishService;
 import com.spring.proyectoTituloMVC.Service.EventService;
+import com.spring.proyectoTituloMVC.Service.ParticipationService;
 
 @Controller
 @Scope ("session")
@@ -40,6 +42,9 @@ public class EventController {
 	
 	@Autowired
 	EventService eventService;
+	
+	@Autowired
+	ParticipationService participationService;
 	
 	@RequestMapping(value = "/addDishEvent", method=RequestMethod.POST)
 	public String addDishEvent(@ModelAttribute("dish") Dish dish, Model model, HttpSession session, BindingResult result) {
@@ -112,11 +117,9 @@ public class EventController {
 		}
 		
 		List <Dish> dishes = dishService.getAllDishes();
-		List <Dish> dishesContained = new ArrayList<Dish>();
+		List<Contain> allContained = new ArrayList<Contain>();
 		Event eventAux = new Event();
 		
-		List<Contain> allContained = new ArrayList<Contain>();
-		Contain contained = new Contain();
 		
 		
 		System.out.println("Lista de platillos contenidos en evento cargada en dishesContained...");
@@ -136,38 +139,114 @@ public class EventController {
 		eventAux.setFechaTermino(event.getFechaTermino());
 		eventAux.setPrecio(event.getPrecio());
 		eventAux.setCantidad(event.getCantidad());
+		eventAux.setCantidadDisp(eventAux.getCantidad());
+		eventAux.setHabilitado(true);
+		
 		
 		System.out.println("id empresa: "+empresa.getIdCliente());
 		eventAux.setEmpresa(empresa);
 		
+		System.out.println("dishes size: "+dishes.size());
+		eventService.save(eventAux);
+		System.out.println("Guardado en base de datos eventAux 1era vez antes del For...");
+		
+		Event eventAux2 = eventService.getEventsByNombre(eventAux.getNombre());
+		
+		
+		
 		for(int i=0; i<dishes.size();i++) {
-			System.out.println("Entrando a for addEvent...");
 			if(dishes.get(i).isSelected()) {
-				dishesContained.add(dishes.get(i));
-				System.out.println("Platillo: "+ dishes.get(i).getNombre()+" agregado a dishesContained...");
+				System.out.println("Platillo: "+dishes.get(i).getNombre()+" seleccionado...");
+				Contain contained = new Contain();
 				
-				contained.setEventoContener(eventAux);
+				contained.setEventoContener(eventAux2);
+				System.out.println("Seteado en contained evento...");
+				
+				System.out.println("Platillo: "+ dishes.get(i).getNombre()+" agregado a dishesContained...");
 				contained.setPlatilloContener(dishes.get(i));
-				System.out.println("Seteado en contained platillo y evento...");
 				
 				containService.save(contained);
 				System.out.println("Guardado en base de datos contained...");
 				
 				allContained.add(contained);
-				System.out.println("Agregado contained a lista allContained...");
+				System.out.println("Agregado contained a allContained...");
 			}
 		}
 		
-		eventAux.setMisPlatillos(allContained);
-		System.out.println("Guardados allContained en eventAux...");
-		
-		eventAux.setHabilitado(true);
-		
-		eventService.save(eventAux);
-		System.out.println("Guardado en base de datos eventAux...");
+		eventAux2.setMisPlatillos(allContained);
+		eventService.save(eventAux2);
 		
 		loadMyEvents(model,session);
+		unselectDishes(model,session);
 		return "myEvents";
+	}
+	
+	@GetMapping("/eventDet/{id}")
+	public String eventDet(@PathVariable(value="id") String id, Model model, HttpSession session) {
+		System.out.println("Entrando a eventDet...");
+		
+		int idEvent = Integer.parseInt(id);
+		loadEvent(model,session,idEvent);
+		System.out.println("Cargando evento a session y retornando a eventDetail...");
+		
+		return "redirect:/eventDetail.html";
+	}
+	
+	@RequestMapping(value="/addNewOrder", method=RequestMethod.POST)
+	public String addNewOrder(@ModelAttribute("newOrder") Participation newOrder, Model model, HttpSession session, BindingResult result) {
+		System.out.println("Iniciando addNewOrder...");
+		
+		Event event = (Event) session.getAttribute("eventD");
+		User client = (User) session.getAttribute("user");
+		
+		if(newOrder.getCantidad()==0) {
+			System.out.println("Error: la cantidad de pedidos no puede ser 0...");
+			result.addError(new FieldError("newOrder", "cantidad", "La cantidad de pedidos no puede ser 0"));
+		}else if(event.getCantidadDisp()<newOrder.getCantidad()) {
+			System.out.println("Error: la cantidad de pedidos es superior a la cantidad disponible del evento!");
+			result.addError(new FieldError("newOrder", "cantidad", "La cantidad de pedidos es superior a la cantidad disponible del evento"));
+		}else if(event.getCantidadDisp()==newOrder.getCantidad()) {
+			event.setHabilitado(false);
+			System.out.println("Se han pedido todos los platillos disponibles, el evento ya no tiene stock");
+		}
+		if(result.hasErrors()) return "eventDetail";
+		
+		event.setCantidadDisp(event.getCantidadDisp()-newOrder.getCantidad());
+		eventService.save(event);
+		
+		System.out.println("Cantidad de pedidos: "+newOrder.getCantidad());
+		System.out.println("Nueva cantidad disponible: "+ event.getCantidadDisp());
+		
+		newOrder.setCliente(client);
+		newOrder.setEvento(event);
+		System.out.println("Seteado cliente: "+client.getNombre());
+		System.out.println("Seteado evento: "+event.getNombre());
+		
+		participationService.save(newOrder);
+		System.out.println("Guardado el pedido");
+		
+		//Cambiar a myOrders después de probar
+		return "redirect:/eventDetail.html";
+	}
+	
+	public void loadEvent(Model model, HttpSession session, int id) {
+		System.out.println("Iniciando carga de datos de evento seleccionado en eventDetail...");
+		
+		Event event = eventService.getEventById(id);
+		List<Dish> dishesFromEvent = new ArrayList<Dish>(); 
+		System.out.println("Obtenido evento: "+event.getNombre());
+		
+		List<Contain> todosContains = containService.getContainsByEventoContener(event);
+		System.out.println("todosContains size: "+ todosContains.size());
+		
+		for(int i=0; i<todosContains.size();i++) {
+			dishesFromEvent.add(todosContains.get(i).getPlatilloContener());
+			System.out.println("Platillo: "+dishesFromEvent.get(i).getNombre()+" agregado a dishesFromEvent...");
+		}
+		
+		session.setAttribute("eventD", event);
+		session.setAttribute("dishesFromEvent", dishesFromEvent);
+		System.out.println("Agregados dishesFromEvent y eventD a session...");
 	}
 	
 	public void loadDishes(Model model, HttpSession session) {
@@ -217,5 +296,13 @@ public class EventController {
 		model.addAttribute("myInactiveEvents", myInactiveEvents);
 		System.out.println("Se agregó myActiveEvents con un total de "+ myActiveEvents.size()+" eventos a model...");
 		System.out.println("Se agregó myInactiveEvents con un total de "+ myInactiveEvents.size()+" eventos a model...");
+	}
+	
+	public void unselectDishes(Model model, HttpSession session) {
+		List<Dish> dishes = dishService.getAllDishes();
+		for(int i=0; i<dishes.size();i++) {
+			dishes.get(i).setSelected(false);
+			dishService.save(dishes.get(i));
+		}
 	}
 }

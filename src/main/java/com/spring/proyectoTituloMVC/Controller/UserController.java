@@ -1,6 +1,8 @@
 package com.spring.proyectoTituloMVC.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.spring.proyectoTituloMVC.Entity.Event;
 import com.spring.proyectoTituloMVC.Entity.User;
+import com.spring.proyectoTituloMVC.Service.EventService;
 import com.spring.proyectoTituloMVC.Service.UserService;
 
 @Controller 
@@ -27,6 +31,9 @@ import com.spring.proyectoTituloMVC.Service.UserService;
 public class UserController {
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	EventService eventService;
 	
 	@GetMapping("/login.html")
 	public String login(Model model, HttpSession session){
@@ -215,6 +222,60 @@ public class UserController {
 		return "redirect:/usersAdmin.html";
 	}
 	
+	@GetMapping("/companyDetail/{id}")
+	public String companyDetail(@PathVariable(value="id") String id, Model model, HttpSession session) {
+		System.out.println("Entrando a companyDetail...");
+		
+		int idComp = Integer.parseInt(id);
+		
+		User compAux = userService.getUserById(idComp);
+		session.setAttribute("compDet", compAux);
+		System.out.println("Empresa a ver detalle agregada a session");
+		
+		if(compAux.getMisEventos().size()>0) System.out.println("Evento 1: "+ compAux.getMisEventos().get(1).getNombre());
+		session.setAttribute("events", compAux.getMisEventos());
+		System.out.println("Lista de los eventos de la empresa agregada a session");
+		
+		return "redirect:/userDetail.html";
+	}
+	
+	public void loadIndexEvents(Model model, HttpSession session) {
+		System.out.println("Iniciando carga de eventos de inicio en loadIndexEvents...");
+		
+		List<Event> allEvents = eventService.getAllEvents();
+		List<Event> activeEvents = new ArrayList<Event>(allEvents.size());
+		List<Event> indexEvents = new ArrayList<Event>(8);
+		
+		for(int i=0; i<allEvents.size();i++) {
+			if(allEvents.get(i).isHabilitado()) {
+				activeEvents.add(allEvents.get(i));
+				System.out.println("Evento: "+ allEvents.get(i).getNombre()+" activo");
+			}
+		}
+		
+		Random r = new Random();
+		System.out.println("Cantidad de eventos activos: "+activeEvents.size());
+		for(int i=0; i<8; i++) {
+			int nRandom = r.nextInt(((activeEvents.size()-2)-0)+1)-0;
+			System.out.println("activeEvents size: "+activeEvents.size());
+			indexEvents.add(activeEvents.get(nRandom));
+			System.out.println("Evento: "+activeEvents.get(nRandom).getNombre()+" agregado a index...");
+			activeEvents.remove(nRandom);
+		}
+		model.addAttribute("indexEvents", indexEvents);
+		session.setAttribute("indexEvents", indexEvents);
+		System.out.println("Seteado en model y session la lista de eventos a index...");
+	}
+	
+	/*public void loadCompanyEvents(Model model, HttpSession session, int id) {
+		System.out.println("Iniciando carga de eventos de la empresa...");
+		
+		User comp = userService.getUserById(id);
+		List<Event> events = comp.getMisEventos();
+		if(events.size()>0)System.out.println("Empresa: "+comp.getNombre()+" Evento 1: "+events.get(0).getNombre());
+		
+		model.addAttribute("events",events);
+	}*/
 	
 	@GetMapping("/getAllUsers")
 	public ResponseEntity<List<User>> getAllUsers(){

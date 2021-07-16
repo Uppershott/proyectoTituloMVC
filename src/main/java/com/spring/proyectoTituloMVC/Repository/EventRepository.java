@@ -15,7 +15,7 @@ public interface EventRepository extends JpaRepository<Event,Integer>{
 	
 	//@Query("select e from Event e where e.nombre = %:nombre%")
 	//List<Event> findByNombre(@Param("nombre") String nombre);
-	List<Event> findByNombre(String nombre);
+	Event findByNombre(String nombre);
 	List<Event> findByFechaCreacion(Date fechaCreacion);
 	List<Event> findByFechaInicio(Date fechaInicio);
 	List<Event> findByFechaTermino(Date fechaTermino);

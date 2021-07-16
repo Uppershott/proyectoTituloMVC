@@ -36,8 +36,8 @@
 	                                    </thead>
 	                                    <tbody>
 	                                    	<tr th:each="events: ${myEventsListEnabled}">
-	                                    		<td th:text="${events.nombre}"/>
-	                                    		<td th:text="${events.empresa.nombre}"/>
+	                                    		<td><a th:href="|@{/eventDet/{id}(id=${events.idEvent})}|"><label th:text="${events.nombre}"></label></a></td>
+	                                    		<td> <a th:href="|@{/companyDetail/{id}(id=${events.empresa.idCliente})}|"><label th:text="${events.empresa.nombre}"></label></a></td>
 	                                    		<td th:text="${events.descripcion}"/>
 	                                    		<td th:text="${events.fechaCreacion}"/>
 	                                    		<td th:text="${events.fechaTermino}"/>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.proyectoTituloMVC.Entity.Contain;
+import com.spring.proyectoTituloMVC.Entity.Event;
 import com.spring.proyectoTituloMVC.Repository.ContainRepository;
 
 @Service
@@ -24,9 +25,16 @@ public class ContainService {
 		return contains;
 	}
 	
+	public List<Contain> getContainsByEventoContener(Event evento){
+		List<Contain> contains = containRepository.findByEventoContener(evento);
+		return contains;
+	}
+	
 	public <S extends Contain> S save(Contain contain) {
 		return containRepository.save(contain);
 	}
+	
+	
 	
 	/*
 	public List<Contain> getContainsByPlatillo(int id){

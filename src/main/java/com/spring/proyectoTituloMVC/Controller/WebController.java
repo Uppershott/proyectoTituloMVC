@@ -1,7 +1,11 @@
 package com.spring.proyectoTituloMVC.Controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.spring.proyectoTituloMVC.Entity.User;
 import com.spring.proyectoTituloMVC.Entity.Dish;
 import com.spring.proyectoTituloMVC.Entity.Event;
+import com.spring.proyectoTituloMVC.Entity.Participation;
 import com.spring.proyectoTituloMVC.Service.DishService;
 import com.spring.proyectoTituloMVC.Service.EventService;
 import com.spring.proyectoTituloMVC.Service.UserService;
@@ -32,13 +37,15 @@ public class WebController {
 	DishService dishService;
 	
 	@GetMapping("/")
-	public String index(Model model, HttpSession session){
+	public String index(Model model, HttpSession session) throws ParseException{
 		User user = new User();
 		user.setRol(1);
 		
 		model.addAttribute("user", user);
 		session.setAttribute("user", user);
-		
+				
+		disableExpiredEvents(model,session);
+		loadIndexEvents(model,session);
 		return "index";
 	}
 	
@@ -123,7 +130,19 @@ public class WebController {
 		if(user.getNombre()==null) {
 			return "401";
 		}else {
+			loadCompanies(model,session);
 			return "company";
+		}
+	}
+	
+	@GetMapping("/userDetail.html")
+	public String userDetail(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			
+			return "userDetail";
 		}
 	}
 	
@@ -162,6 +181,18 @@ public class WebController {
 		}
 	}
 	
+	@GetMapping("/eventDetail.html")
+	public String eventDetail(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			model.addAttribute("newOrder", new Participation());
+			System.out.println("Agregado newOrder a model...");
+			return "eventDetail.html";
+		}
+	}
+	
 	@GetMapping("/eventCreate.html")
 	public String eventCreate(Model model, HttpSession session) {
 		
@@ -175,7 +206,6 @@ public class WebController {
 			session.setAttribute("newDish", new Dish());
 			session.setAttribute("dish", new Dish());
 			loadDishes(model, session);
-			unselectDishes(model,session);
 			
 			System.out.println("Agregado dish y newDish a model y cargadas las listas...");
 			return "eventCreate";
@@ -349,4 +379,67 @@ public class WebController {
 	} 
 	*/
 	
+	public void loadCompanies(Model model, HttpSession session) {
+		System.out.println("Iniciando loadCompanies...");
+		
+		List<User> users = userService.getUsers();
+		List<User> companies = new ArrayList<User>();
+		
+		for(int i=0; i<users.size();i++) {
+			if(users.get(i).getRol()==2) {
+				companies.add(users.get(i));
+				System.out.println("Empresa: "+users.get(i).getNombre()+" agregado a companies...");
+			}
+		}
+		model.addAttribute("companies",companies);
+		System.out.println("Agregado companies a model...");
+	}
+	
+	public void disableExpiredEvents(Model model, HttpSession session) throws ParseException{
+		System.out.println("Iniciando proceso de deshabilitación de eventos que caducaron por fecha...");
+		
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+		Date hoy = new Date();
+		
+		List<Event> allEvents = eventService.getAllEvents();
+		
+		for(int i=0; i<allEvents.size(); i++) {
+			if(allEvents.get(i).isHabilitado()) {
+				Date fTerm = formato.parse(allEvents.get(i).getFechaTermino());
+				if(fTerm.before(hoy) || fTerm.equals(hoy)) {
+					System.out.println("Evento: "+allEvents.get(i).getNombre()+" ha sido deshabilitado por caducar en fecha");
+					allEvents.get(i).setHabilitado(false);
+					eventService.save(allEvents.get(i));
+				}
+			}
+		}
+	}
+	
+	public void loadIndexEvents(Model model, HttpSession session) {
+		System.out.println("Iniciando carga de eventos de inicio en loadIndexEvents...");
+		
+		List<Event> allEvents = eventService.getAllEvents();
+		List<Event> activeEvents = new ArrayList<Event>(allEvents.size());
+		List<Event> indexEvents = new ArrayList<Event>(8);
+		
+		for(int i=0; i<allEvents.size();i++) {
+			if(allEvents.get(i).isHabilitado()) {
+				activeEvents.add(allEvents.get(i));
+				System.out.println("Evento: "+ allEvents.get(i).getNombre()+" activo");
+			}
+		}
+		
+		Random r = new Random();
+		System.out.println("Cantidad de eventos activos: "+activeEvents.size());
+		for(int i=0; i<8; i++) {
+			int nRandom = r.nextInt(((activeEvents.size()-2)-0)+1)-0;
+			System.out.println("activeEvents size: "+activeEvents.size());
+			indexEvents.add(activeEvents.get(nRandom));
+			System.out.println("Evento: "+activeEvents.get(nRandom).getNombre()+" agregado a index...");
+			activeEvents.remove(nRandom);
+		}
+		model.addAttribute("indexEvents", indexEvents);
+		session.setAttribute("indexEvents", indexEvents);
+		System.out.println("Seteado en model y session la lista de eventos a index...");
+	}
 }

@@ -29,19 +29,23 @@
 	                                            <th>Correo</th>
 	                                            <th>Direccion</th>
 	                                            <th>Teléfono</th>
-	                                            <th>Cantidad de Eventos realizados</th>
+	                                            <th>Rubro</th>
 	                                        </tr>
 	                                    </thead>
-	                                    <tfoot>
-	                                        <tr>
-	                                            <th>Nombre</th>
-	                                            <th>Correo</th>
-	                                            <th>Direccion</th>
-	                                            <th>Teléfono</th>
-	                                            <th>Cantidad de Eventos realizados</th>
-	                                        </tr>
-	                                    </tfoot>
 	                                    <tbody>
+	                                    	<tr th:each="comp: ${companies}">
+	                                    		<td> <a th:href="|@{/companyDetail/{id}(id=${comp.idCliente})}|"><label th:text="${comp.nombre}"></label></a></td>
+	                                    		<td th:text="${comp.correo}"/>
+	                                    		<td th:text="${comp.direccion}"/>
+	                                    		<td th:text="${comp.telefono}"/>
+	                                    		<td>
+	                                    			<label th:if="${comp.rubro==1}">Restaurante</label>
+	                                    			<label th:if="${comp.rubro==2}">Cafetería</label>
+	                                    			<label th:if="${comp.rubro==3}">Delivery</label>
+	                                    			<label th:if="${comp.rubro==4}">Negocio Pequeño</label>
+	                                    			<label th:if="${comp.rubro==5}">Otros</label>
+	                                    		</td>
+	                                    	</tr>
 	                                    </tbody>
 	                                </table>
 	                            </div>

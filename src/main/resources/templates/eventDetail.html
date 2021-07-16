@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Emprendimientos Ya!</title>
+        <link href="css/styles.css" rel="stylesheet" />
+        <link href="css/tableStyle.css" rel="stylesheet"/>
+        <link href="css/dishStyle.css" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/profileStyle.css" rel="stylesheet" />
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+	<header th:replace="layout/header :: header"></header>
+        <div id="layoutSidenav">
+	        <div th:replace="Layout/body :: body"></div>
+	        <div id="layoutSidenav_content">
+	            <main>
+					<div class="container">
+						<div class="row justify-content-center">
+                            <div class="col-lg-7">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Detalle del evento</h3></div>
+	                                   	<div class="card-body">
+                                        	<div align=center class="form-group">
+                                        		<div class="form-row">
+		                                            <div class="col-md-6">
+					  									<div class="form-group">
+			                                                <label class="small mb-1" for="inputName">Nombre del evento</label>
+			                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.nombre}" name="nameEventDetail" readonly/>
+			                                    		</div>
+			                                    	</div>
+			                                    	<div class="col-md-6">
+			                                    		<div class="form-group">
+		                                                	<label class="small mb-1" for="inputNameComp">Nombre de la empresa</label>
+		                                                	<input class="form-control py-4"  type="text" th:value="${session.eventD.empresa.nombre}" name="nameEventCompDetail" readonly/>
+		                                    			</div>
+		                                    		</div>
+		                                    	</div>
+		                                    	<div class="form-group">
+	                                                <label class="small mb-1" for="inputAddress">Direción de la Empresa</label>
+	                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.empresa.direccion}" name="addressEventCompDetail" readonly/>
+	                                    		</div>
+	                                    		<div class="form-group">
+	                                                <label class="small mb-1" for="inputDescription">Descripción del evento</label>
+	                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.descripcion}" name="descriptionEventDetail" readonly/>
+	                                    		</div>
+	                                            <div class="form-row">
+	                                            	<div class="col-md-4">
+	                                            		<div class="form-group">
+	                                                		<label class="small mb-1" for="inputDate">Fecha de término</label>
+	                                               			<input class="form-control py-4"  type="date" th:value="${session.eventD.fechaTermino}" name="dateEventDetail" readonly/>
+	                                        			</div>
+	                                            	</div>
+	                                                <div class="col-md-4">
+	                                                	<div class="form-group">
+	                                               			<label class="small mb-1" for="inputCantidad">Cantidad de pedidos disponibles</label>
+	                                                		<input class="form-control py-4"  type="text" th:value="${session.eventD.cantidadDisp}" name="cantidadEventDetail" readonly/>
+	                                            		</div>
+	                                            	</div>
+	                                            	<div class="col-md-4">
+	                                                	<div class="form-group">
+	                                               			<label class="small mb-1" for="inputPrice">Precio del evento</label>
+	                                                		<input class="form-control py-4"  type="text" th:value="${session.eventD.precio}" name="priceEventDetail" readonly/>
+	                                            		</div>
+	                                            	</div>
+	                                            </div>
+		                                            <label class="small mb-1" for="inputName">Platillos del evento</label>
+	                                            	<table cellpadding="0"  id="example" name="dataTable" width="85%">
+					                                    <thead>
+					                                        <tr>
+					                                            <th>Nombre</th>
+					                                            <th>Descripción</th>
+					                                        </tr>
+					                                    </thead>
+					                                    <tbody>
+					                                    	<tr th:each="dishes: ${session.dishesFromEvent}">
+					                                    		<td th:text="${dishes.nombre}"/>
+					                                    		<td th:text="${dishes.descripcion}"/>
+					                                    	</tr>
+					                                    </tbody>
+					                                </table>
+					                                <form action="addNewOrder" th:action="@{/addNewOrder}" th:object="${newOrder}" method="post">
+			                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+			    											<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+					  									</div>
+			                                            <div class="form-row">
+				                                            <div class="col-md-4">
+					                                            <div class="form-group mt-4 mb-0">
+					                                            	<button type="submit" class="btn btn-primary btn-block" onClick="location.href='events.html'">Volver</button>
+					                                            </div>
+					                                        </div>
+					                                        
+					                                        <div class="col-md-4">
+					                                            <div class="form-group mt-4 mb-0">
+					                                            	<input type="number" min="1" class="form-control py-4" name="cantidadOrder" th:field="*{cantidad}" required/>
+					                                            </div>
+					                                        </div>
+					                                        <div th:if="${session.eventD.habilitado}" class="col-md-4">
+					                                            <div class="form-group mt-4 mb-0">
+					                                            	<button type="submit" class="btn btn-primary btn-block">Agregar pedido</button>
+					                                            </div>
+					                                        </div>
+					                                        <label th:if="${!session.eventD.habilitado}" class="col-md-6">No quedan porciones disponibles</label>
+				                                        </div>
+			                                        </form>
+                                   			</div>
+	                               	 	</div>
+	                           	 	</div>
+	                        	</div>
+	                    	</div>
+				    	</div>
+	            </main>
+	            <footer  th:replace="Layout/footer :: footer">
+	            </footer>
+	         </div>
+	         
+	     </div>
+	     <script>
+	     	$(document).ready(function(){
+        		$("#reira").on('change', function(){
+        			$(".data").hide();
+        			$("#" + $(this).val()).show();
+        		}).change();
+        	});
+			
+	     </script>
+	     <script>
+			$(document).ready(function() {
+			$('table#example').DataTable({
+  			  
+	   		 "searching": false });
+			});
+		</script>
+		<script>
+	     	function openForm(){
+	     		document.getElementById("myForm").style.display = "block";
+	     	}
+	     	
+	     	function closeForm(){
+	     		document.getElementById("myForm").style.display = "none";
+	     	}
+		</script>
+	     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="assets/demo/chart-area-demo.js"></script>
+        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+        <script src="assets/demo/datatables-demo.js"></script>
+</body>
+</html>

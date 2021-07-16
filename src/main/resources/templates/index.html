@@ -25,102 +25,20 @@
 	                     </ol>
 	                      -->
 	                    <div class="row">
-	                        <div class="col-xl-3 col-md-6">
+	                        <div th:each="indexEvent: ${session.indexEvents}" class="col-xl-3 col-md-6">
 	                            <div class="card bg-warning text-white mb-4">
-	                                <div class="card-body">Oferta Evento 1</div>
+	                                <div class="card-body"><label th:text="${indexEvent.nombre}"></label></div>
 	                                <div class="card-footer d-flex align-items-center justify-content-between">
+	                                    <label th:text="${indexEvent.descripcion}"></label><br>
+	                                    <label th:text="${indexEvent.fechaTermino}"></label><br>
+	                                    <label th:text="${indexEvent.empresa.nombre}"></label><br>
 	                                    <a class="small text-white stretched-link" href="#">Ver Detalles</a>
 	                                    <div class="small text-white"><i class="fas fa-angle-right" ></i></div>
 	                                </div>
 	                            </div>
 	                        </div>
-	                        <div class="col-xl-3 col-md-6">
-	                            <div class="card bg-warning text-white mb-4">
-	                                <div class="card-body">Oferta Evento 2</div>
-	                                <div class="card-footer d-flex align-items-center justify-content-between">
-	                                	asdasdasdasdasd
-	                                	asdasdasdasdasd
-	                                	asdasdasdasdasd
-	                                	asdasdasdasd
-	                                	asdasdasdasdasdasdasdasd
-	                                	asdasd
-	                                    <a class="small text-white stretched-link" href="#">Ver Detalles</a>
-	                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-	                                </div>
-	                            </div>
-	                        </div>
-	                        <div class="col-xl-3 col-md-6">
-	                            <div class="card bg-warning text-white mb-4">
-	                                <div class="card-body">Oferta Evento 3</div>
-	                                <div class="card-footer d-flex align-items-center justify-content-between">
-	                                    <a class="small text-white stretched-link" href="#">Ver Detalles</a>
-	                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-	                                </div>
-	                            </div>
-	                        </div>
-	                        <div class="col-xl-3 col-md-6">
-	                            <div class="card bg-warning text-white mb-4">
-	                                <div class="card-body">Oferta Evento 4</div>
-	                                <div class="card-footer d-flex align-items-center justify-content-between">
-	                                    <a class="small text-white stretched-link" href="#">Ver Detalles</a>
-	                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-	                                </div>
-	                            </div>
-	                        </div>
 	                    </div>
-	                    <ol class="breadcrumb mb-4">
-	                    <li class="breadcrumb-item active">Otros Eventos!</li>
-	                 </ol>
-	                 <!-- 
-	                     <div class="row">
-	                         <div class="col-xl-6">
-	                             <div class="card mb-4">
-	                                 <div class="card-header">
-	                                     <i class="fas fa-chart-area mr-1"></i>
-	                                     Area Chart Example
-	                                 </div>
-	                                 <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
-	                             </div>
-	                         </div>
-	                         <div class="col-xl-6">
-	                             <div class="card mb-4">
-	                                 <div class="card-header">
-	                                     <i class="fas fa-chart-bar mr-1"></i>
-	                                     Bar Chart Example
-	                                 </div>
-	                                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-	                             </div>
-	                         </div>
-	                     </div>
-	                     -->
-	                    <div class="card mb-4">
-	                        <div class="card-body">
-	                            <div class="table-responsive">
-	                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-	                                    <thead>
-	                                        <tr>
-	                                            <th>Nombre</th>
-	                                            <th>Descripción</th>
-	                                            <th>Inicio</th>
-	                                            <th>Término</th>
-	                                            <th>Precio unidad</th>
-	                                        </tr>
-	                                    </thead>
-	                                    <tfoot>
-	                                        <tr>
-	                                            <th>Nombre</th>
-	                                            <th>Descripción</th>
-	                                            <th>Inicio</th>
-	                                            <th>Término</th>
-	                                            <th>Precio unidad</th>
-	                                        </tr>
-	                                    </tfoot>
-	                                    <tbody>
-	                                    </tbody>
-	                                </table>
-	                            </div>
-	                        </div> 
-	                    </div>
+	                   
 	                </div>
 	            </main>
 	            <footer  th:replace="Layout/footer :: footer">

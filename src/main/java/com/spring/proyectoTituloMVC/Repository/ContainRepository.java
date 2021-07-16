@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.spring.proyectoTituloMVC.Entity.Contain;
+import com.spring.proyectoTituloMVC.Entity.Event;
 
 @Repository
 public interface ContainRepository extends JpaRepository<Contain,Integer>{
 	Contain findById(int id);
 	List<Contain> findAll();
+	List<Contain> findByEventoContener(Event evento);
 	
 	//Obtiene todos los eventos que contengan un platillo en específico
 	//List <Contain> findByPlatillo(int id);
