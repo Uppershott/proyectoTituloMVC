@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.proyectoTituloMVC.Entity.Participation;
+import com.spring.proyectoTituloMVC.Entity.User;
 import com.spring.proyectoTituloMVC.Repository.ParticipationRepository;
 
 @Service
@@ -24,8 +25,8 @@ public class ParticipationService {
 		return participations;
 	}
 	
-	public List<Participation> getParticipationsByRetira(boolean retira){
-		List<Participation> participations = participationRepository.findAllParticipacionesByRetira(retira);
+	public List<Participation> getParticipationByCliente(User cliente){
+		List<Participation> participations = participationRepository.findParticipationsByCliente(cliente);
 		return participations;
 	}
 	

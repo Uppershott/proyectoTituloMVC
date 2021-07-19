@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,6 +20,7 @@ import com.spring.proyectoTituloMVC.Entity.Event;
 import com.spring.proyectoTituloMVC.Entity.Participation;
 import com.spring.proyectoTituloMVC.Service.DishService;
 import com.spring.proyectoTituloMVC.Service.EventService;
+import com.spring.proyectoTituloMVC.Service.ParticipationService;
 import com.spring.proyectoTituloMVC.Service.UserService;
 
 @Controller
@@ -35,6 +35,9 @@ public class WebController {
 	
 	@Autowired
 	DishService dishService;
+	
+	@Autowired
+	ParticipationService participationService;
 	
 	@GetMapping("/")
 	public String index(Model model, HttpSession session) throws ParseException{
@@ -105,7 +108,48 @@ public class WebController {
 		if(user.getNombre()==null) {
 			return "401";
 		}else {
+			loadUserOrders(model,session,user);
+			
 			return "myOrders";
+		}
+	}
+	
+	public void loadUserOrders(Model model, HttpSession session, User user) {
+		System.out.println("Iniciando carga de pedidos de usuario...");
+		
+		List<Participation> userOrders = participationService.getParticipationByCliente(user);
+		System.out.println("ordersList size: "+userOrders.size());
+		if(userOrders.size()>0) {
+			List<Participation> userOrdersAux = new ArrayList<Participation>();
+			
+			int cant = userOrders.size();
+			
+			for(int i=0; i<cant; i++) {
+				if(userOrders.get(i).isVigente()) {
+					System.out.println("Pedido al evento: "+userOrders.get(i).getEvento().getNombre()+" agregado la lista ordersList...");
+					userOrdersAux.add(userOrders.get(i));
+					
+				}
+				System.out.println("index de la lista: "+i);
+			}
+			
+			session.setAttribute("ordersList", userOrdersAux);
+			System.out.println("Seteada lista ordersList a session...");
+		}else {
+			session.setAttribute("ordersList", new ArrayList<Participation>());
+		}
+		
+	}
+	
+	@GetMapping("/orderDetail.html")
+	public String orderDetail(Model model, HttpSession session) {
+		System.out.println("Entrando a orderDetail...");
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			return "orderDetail";
 		}
 	}
 	
@@ -429,14 +473,14 @@ public class WebController {
 			}
 		}
 		
-		Random r = new Random();
+		//Random r = new Random();
 		System.out.println("Cantidad de eventos activos: "+activeEvents.size());
 		for(int i=0; i<8; i++) {
-			int nRandom = r.nextInt(((activeEvents.size()-2)-0)+1)-0;
+			//int nRandom = r.nextInt(((activeEvents.size()-2)-0)+1)-0;
 			System.out.println("activeEvents size: "+activeEvents.size());
-			indexEvents.add(activeEvents.get(nRandom));
-			System.out.println("Evento: "+activeEvents.get(nRandom).getNombre()+" agregado a index...");
-			activeEvents.remove(nRandom);
+			indexEvents.add(activeEvents.get(i));
+			//System.out.println("Evento: "+activeEvents.get(nRandom).getNombre()+" agregado a index...");
+			//activeEvents.remove(nRandom);
 		}
 		model.addAttribute("indexEvents", indexEvents);
 		session.setAttribute("indexEvents", indexEvents);

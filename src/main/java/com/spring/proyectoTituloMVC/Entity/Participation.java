@@ -2,6 +2,7 @@ package com.spring.proyectoTituloMVC.Entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,22 +26,18 @@ public class Participation implements Serializable{
 	@Column(name="id")
 	private int id;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name="idEvento")
 	private Event evento;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name="idCliente")
 	private User cliente;
 	
 	@Column(name="cantidad")
 	private int cantidad;
 	
-	@Column(name="direccion")
-	private String direccion;
-	
-	@Column(name="retira")
-	private boolean retira;
+	private boolean vigente;
 
 	public int getId() {
 		return id;
@@ -74,21 +71,13 @@ public class Participation implements Serializable{
 		this.cantidad = cantidad;
 	}
 
-	public String getDireccion() {
-		return direccion;
+	public boolean isVigente() {
+		return vigente;
 	}
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+	public void setVigente(boolean vigente) {
+		this.vigente = vigente;
 	}
 
-	public boolean isRetira() {
-		return retira;
-	}
-
-	public void setRetira(boolean retira) {
-		this.retira = retira;
-	}
-	
 	
 }

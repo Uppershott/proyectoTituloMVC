@@ -103,7 +103,7 @@ public class EventController {
 		if(event.getCantidad()==0) {
 			System.out.println("Error: la cantidad de pedidos disponibles no puede ser 0");
 			result.addError(new FieldError("event", "cantidad", "La cantidad de pedidos disponibles no puede ser 0"));
-		}else if(event.getPrecio()==0 || event.getPrecio()==null) {
+		}else if(event.getPrecio()==0) {
 			System.out.println("Error: el precio del evento no puede ser 0");
 			result.addError(new FieldError("event", "precio", "El precio del evento no puede ser 0"));
 		}else if(fTerm.before(hoy)) {
@@ -219,6 +219,7 @@ public class EventController {
 		
 		newOrder.setCliente(client);
 		newOrder.setEvento(event);
+		newOrder.setVigente(true);
 		System.out.println("Seteado cliente: "+client.getNombre());
 		System.out.println("Seteado evento: "+event.getNombre());
 		
@@ -226,7 +227,83 @@ public class EventController {
 		System.out.println("Guardado el pedido");
 		
 		//Cambiar a myOrders después de probar
-		return "redirect:/eventDetail.html";
+		return "redirect:/myOrders.html";
+	}
+	
+	@GetMapping("/orderDet/{id}")
+	public String orderDet(@PathVariable(value="id") String id, Model model, HttpSession session) {
+		System.out.println("Entrando a orderDet...");
+		
+		int idOrder = Integer.parseInt(id);
+		loadOrderDetail(model,session,idOrder);
+		System.out.println("Cargando participation a session y retornando a orderDetail...");
+		
+		return "redirect:/orderDetail.html";
+	}
+	
+	@GetMapping("/cancelOrder")
+	public String cancelOrder(Model model, HttpSession session) {
+		System.out.println("Iniciando cancelación de pedido...");
+		
+		User user = (User) session.getAttribute("user");
+		
+		Participation order = (Participation) session.getAttribute("order");
+		Event event = (Event) session.getAttribute("eventD");
+		System.out.println("Cantidad del pedido: "+order.getCantidad());
+		System.out.println("Cantidad disponible del evento: "+event.getCantidadDisp());
+		
+		event.setCantidadDisp(event.getCantidadDisp()+order.getCantidad());
+		System.out.println("Cantidad disponible del evento luego de sumar: "+event.getCantidadDisp());
+		
+		order.setVigente(false);
+		
+		participationService.save(order);
+		eventService.save(event);
+		System.out.println("Pedido cancelado y evento restaurado, ambos guardados...");
+		
+		loadUserOrders(model,session,user);
+		
+		System.out.println("Redirigiendo a myOrders.html...");
+		return "myOrders.html";
+	}
+	
+	public void loadUserOrders(Model model, HttpSession session, User user) {
+		System.out.println("Iniciando carga de pedidos de usuario...");
+		
+		List<Participation> userOrders = participationService.getParticipationByCliente(user);
+		System.out.println("ordersList size: "+userOrders.size());
+		if(userOrders.size()>0) {
+			List<Participation> userOrdersAux = new ArrayList<Participation>();
+			
+			int cant = userOrders.size();
+			
+			for(int i=0; i<cant; i++) {
+				if(userOrders.get(i).isVigente()) {
+					System.out.println("Pedido al evento: "+userOrders.get(i).getEvento().getNombre()+" agregado la lista ordersList...");
+					userOrdersAux.add(userOrders.get(i));
+					
+				}
+				System.out.println("index de la lista: "+i);
+			}
+			
+			session.setAttribute("ordersList", userOrdersAux);
+			System.out.println("Seteada lista ordersList a session...");
+		}else {
+			session.setAttribute("ordersList", new ArrayList<Participation>());
+		}
+		
+	}
+	
+	public void loadOrderDetail(Model model, HttpSession session, int idParticipation) {
+		System.out.println("Iniciando la carga de los detalles de participation...");
+		
+		Participation order = participationService.getParticipationById(idParticipation);
+		System.out.println("id evento: "+ order.getEvento().getIdEvent());
+		
+		loadEvent(model,session,order.getEvento().getIdEvent());
+		session.setAttribute("order", order);
+		System.out.println("Agregado order a session...");
+		
 	}
 	
 	public void loadEvent(Model model, HttpSession session, int id) {

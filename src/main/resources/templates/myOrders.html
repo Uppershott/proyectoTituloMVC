@@ -18,33 +18,43 @@
 	        <div th:replace="Layout/body :: body"></div>
 	        <div id="layoutSidenav_content">
 	            <main>
-					<div class="container">
+					<div class="container-fluid">
+						<ol class="breadcrumb mb-4">
+                    		<li class="breadcrumb-item active">Mis Pedidos</li>
+                 		</ol>
 					        <div class="card mb-4">
 	                        <div class="card-body">
-	                            <div class="table-responsive">
+	                            <div th:if="${!session.ordersList.empty}" class="table-responsive">
 	                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 	                                    <thead>
 	                                        <tr>
-	                                            <th>Nombre</th>
-	                                            <th>Descripción</th>
-	                                            <th>Inicio</th>
-	                                            <th>Término</th>
-	                                            <th>Precio unidad</th>
+	                                            <th>Nombre del Evento</th>
+	                                            <th>Nombre de la empresa</th>
+	                                            <th>Dirección del Evento</th>
+	                                            <th>Porciones reservadas</th>
+	                                            <th>Precio por porción</th>
+	                                            <th>Terminado</th>
 	                                        </tr>
 	                                    </thead>
-	                                    <tfoot>
-	                                        <tr>
-	                                            <th>Nombre</th>
-	                                            <th>Descripción</th>
-	                                            <th>Inicio</th>
-	                                            <th>Término</th>
-	                                            <th>Precio unidad</th>
-	                                        </tr>
-	                                    </tfoot>
 	                                    <tbody>
+	                                    	<tr th:each="orders: ${session.ordersList}">
+	                                    		<td><a th:href="|@{/orderDet/{id}(id=${orders.id})}|" th:text="${orders.evento.nombre}"></a></td>
+	                                    		<td th:text="${orders.evento.empresa.nombre}"/>
+	                                    		<td th:text="${orders.evento.empresa.direccion}"/>
+	                                    		<td th:text="${orders.cantidad}"/>
+	                                    		<td th:text="${orders.evento.precio}"/>
+					                            <td><label th:if="${orders.evento.habilitado}">No</label>
+					                            	<label th:if="${!orders.evento.habilitado}">Si</label>
+					                            </td>
+	                                    	</tr>
 	                                    </tbody>
 	                                </table>
 	                            </div>
+	                            <div th:if="${session.ordersList.empty}" >
+	                            	<ol class="breadcrumb mb-4">
+		                    			<li class="breadcrumb-item active">No ha realizado pedidos</li>
+		                 			</ol>
+		                 		</div>
 	                        </div> 
 	                    </div>
 				    </div>

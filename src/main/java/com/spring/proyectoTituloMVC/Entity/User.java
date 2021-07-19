@@ -7,6 +7,7 @@ import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -71,7 +72,7 @@ public class User implements Serializable{
 	private List<Event> misEventos;
 	
 	//relación bi-direccional con User rol cliente. Un Cliente participa a muchos Eventos
-	@OneToMany(mappedBy="cliente", cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy="cliente", cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
 	private List<Participation> misParticipaciones;
 	
 	public int getIdCliente() {

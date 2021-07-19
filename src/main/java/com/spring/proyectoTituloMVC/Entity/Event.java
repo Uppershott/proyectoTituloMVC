@@ -57,7 +57,7 @@ public class Event implements Serializable {
 	
 	
 	@Column (name="precio")
-	private Double precio;
+	private int precio;
 	
 	@Column (name="cantidad")
 	private int cantidad;
@@ -135,11 +135,11 @@ public class Event implements Serializable {
 		this.detalle = detalle;
 	}
 
-	public Double getPrecio() {
+	public int getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(Double precio) {
+	public void setPrecio(int precio) {
 		this.precio = precio;
 	}
 
