@@ -104,6 +104,7 @@
 		                                            <th>Descripción</th>
 		                                            <th>Inicio</th>
 		                                            <th>Término</th>
+		                                            <th>Estado</th>
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
@@ -113,8 +114,8 @@
 		                                    		<td th:text="${events.fechaCreacion}"/>
 		                                    		<td th:text="${events.fechaTermino}"/>
 		                                    		<td>
-		                                    			<label th:if="${events.habilitado==0}">Terminado</label>
-		                                    			<label th:if="${events.habilitado==1}">Vigente</label>
+		                                    			<label th:if="${events.habilitado}">Terminado</label>
+		                                    			<label th:if="${!events.habilitado}">Vigente</label>
 		                                    		</td>
 		                                    	</tr>
 		                                    </tbody>

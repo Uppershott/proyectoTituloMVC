@@ -75,6 +75,77 @@ public class EventController {
 		return "redirect:/eventCreate.html";
 	}
 	
+	@GetMapping("/editDishEvent")
+	public String editDishEvent(Model model, HttpSession session) {
+		
+		model.addAttribute("dish", new Dish());
+		
+		Event event = (Event) session.getAttribute("eventD");
+		System.out.println("id evento: "+event.getIdEvent());
+		System.out.println("Platillos size: "+event.getMisPlatillos());
+		
+		List<Contain> contain = containService.getContainsByEventoContener(event);
+		System.out.println("contain size: "+ contain.size());
+		
+		List<Dish> dishes = new ArrayList<Dish>();
+		
+		List<Dish> allDishes = dishService.getAllDishes();
+		
+		for(int i=0; i<contain.size(); i++) {
+			dishes.add(contain.get(i).getPlatilloContener());
+			System.out.println("Platillo: "+ dishes.get(i).getNombre()+" agregado a dishes");
+		}
+		
+		for(int j=0; j<dishes.size(); j++) {
+			for(int i=0; i<allDishes.size(); i++) {
+				if(allDishes.get(i).getId()==dishes.get(j).getId()) {
+					allDishes.get(i).setSelected(true);
+				}
+			}
+		}
+		
+		loadDishes(model,session);
+		
+		return "redirect:/eventDishEdit.html";
+	}
+	
+	@RequestMapping(value = "/editEventDetail", method=RequestMethod.POST)
+	public String editEventDetail(@ModelAttribute("eventUpdate") Event event, Model model, HttpSession session, BindingResult result) throws ParseException{
+		Event eventAux = (Event) session.getAttribute("eventD");
+		
+		System.out.println("Fecha termino de event: "+event.getFechaTermino());
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+		Date hoy = new Date();
+		Date fTerm = formato.parse(event.getFechaTermino());
+		
+		if(event.getCantidad()==0) {
+			System.out.println("Error: la cantidad de pedidos disponibles no puede ser 0");
+			result.addError(new FieldError("event", "cantidad", "La cantidad de pedidos disponibles no puede ser 0"));
+		}else if(event.getPrecio()==0) {
+			System.out.println("Error: el precio del evento no puede ser 0");
+			result.addError(new FieldError("event", "precio", "El precio del evento no puede ser 0"));
+		}else if(fTerm.before(hoy)) {
+			System.out.println("Error: la fecha de término no puede ser anterior a la fecha actual");
+			result.addError(new FieldError("event", "fechaTermino", "La fecha de término no puede ser anterior a la fecha actual"));
+		}
+		
+		if(result.hasErrors()) {
+			return "eventinfo";
+		}
+		
+		eventAux.setNombre(event.getNombre());
+		eventAux.setDescripcion(event.getDescripcion());
+		eventAux.setFechaTermino(event.getFechaTermino());
+		eventAux.setCantidad(event.getCantidad());
+		eventAux.setCantidadDisp(event.getCantidad());
+		eventAux.setHabilitado(true);
+		eventAux.setPrecio(event.getPrecio());
+		
+		eventService.save(eventAux);
+		
+		return "myEvents";
+	}
+	
 	@GetMapping("/removeDish/{id}")
 	public String removeDish(@PathVariable(value="id") String id, Model model, HttpSession session) {
 		System.out.println("Entrando a removeDish...");
@@ -85,6 +156,25 @@ public class EventController {
 		System.out.println("Platillo: "+dishAux.getNombre()+" ha sido quitado del evento...");
 		
 		return "redirect:/eventCreate.html";
+	}
+	
+	@GetMapping("/eventUp/{id}")
+	public String eventUp(@PathVariable(value="id") String id, Model model, HttpSession session) {
+		System.out.println("Entrando a eventUp...");
+		
+		int idEv = Integer.parseInt(id);
+		/*Event event = eventService.getEventById(idEv);
+		System.out.println("Encontrado evento id: "+event.getIdEvent());
+		
+		model.addAttribute("eventInfo", event);
+		System.out.println("Evento eventInfo agregado a model");
+		*/
+		loadEvent(model,session,idEv);
+		model.addAttribute("eventUpdate", new Event());
+		
+		System.out.println("redireccionando eventInfo.html...");
+		
+		return "redirect:/eventInfo.html";
 	}
 	
 	@RequestMapping(value="/addEvent", method=RequestMethod.POST)
@@ -206,7 +296,7 @@ public class EventController {
 			System.out.println("Error: la cantidad de pedidos es superior a la cantidad disponible del evento!");
 			result.addError(new FieldError("newOrder", "cantidad", "La cantidad de pedidos es superior a la cantidad disponible del evento"));
 		}else if(event.getCantidadDisp()==newOrder.getCantidad()) {
-			event.setHabilitado(false);
+			//event.setHabilitado(false);
 			System.out.println("Se han pedido todos los platillos disponibles, el evento ya no tiene stock");
 		}
 		if(result.hasErrors()) return "eventDetail";
@@ -320,6 +410,8 @@ public class EventController {
 			dishesFromEvent.add(todosContains.get(i).getPlatilloContener());
 			System.out.println("Platillo: "+dishesFromEvent.get(i).getNombre()+" agregado a dishesFromEvent...");
 		}
+		
+		System.out.println("Participantes size: "+event.getMisParticipantes().size());
 		
 		session.setAttribute("eventD", event);
 		session.setAttribute("dishesFromEvent", dishesFromEvent);

@@ -48,7 +48,7 @@
 	                                    		</div>
 	                                    		<div class="form-group">
 	                                                <label class="small mb-1" for="inputDescription">Descripción del evento</label>
-	                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.descripcion}" name="descriptionEventDetail" readonly/>
+	                                                <input class="form-control py-4"  type="text"  th:value="${session.eventD.descripcion}" name="descriptionEventDetail" readonly/>
 	                                    		</div>
 	                                            <div class="form-row">
 	                                            	<div class="col-md-4">
@@ -59,8 +59,8 @@
 	                                            	</div>
 	                                                <div class="col-md-4">
 	                                                	<div class="form-group">
-	                                               			<label class="small mb-1" for="inputCantidad">Cantidad de pedidos disponibles</label>
-	                                                		<input class="form-control py-4"  type="text" th:value="${session.eventD.cantidadDisp}" name="cantidadEventDetail" readonly/>
+	                                               			<label class="small mb-1" for="inputCantidad">Cantidad de pedidos</label>
+	                                                		<input class="form-control py-4"  type="text" th:value="${session.eventD.cantidad}" name="cantidadEventDetail" readonly/>
 	                                            		</div>
 	                                            	</div>
 	                                            	<div class="col-md-4">
@@ -70,51 +70,38 @@
 	                                            		</div>
 	                                            	</div>
 	                                            </div>
-	                                            <hr>
-		                                            <label class="small mb-1" for="inputName">Platillos del evento</label>
-	                                            	<table cellpadding="0"  id="example" name="dataTable" width="85%">
-					                                    <thead>
-					                                        <tr>
-					                                            <th>Nombre</th>
-					                                            <th>Descripción</th>
-					                                        </tr>
-					                                    </thead>
-					                                    <tbody>
-					                                    	<tr th:each="dishes: ${session.dishesFromEvent}">
-					                                    		<td th:text="${dishes.nombre}"/>
-					                                    		<td th:text="${dishes.descripcion}"/>
-					                                    	</tr>
-					                                    </tbody>
-					                                </table>
-					                                <div  th:if="${session.user.rol==1}">
-					                                 	<hr>
-						                                <form action="addNewOrder" th:action="@{/addNewOrder}" th:object="${newOrder}" method="post">
-				                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-				    											<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
-						  									</div>
-						  									<div class="form-group">
-						                                        <label th:if="${session.eventD.cantidadDisp==0}" class="small mb-1">No quedan porciones disponibles</label>
-						                                     </div>
-				                                            <div class="form-row">
-					                                            <div class="col-md-4">
-						                                            <div class="form-group mt-4 mb-0">
-						                                            	<button type="button" class="btn btn-primary btn-block" onClick="location.href='events.html'">Volver</button>
-						                                            </div>
-						                                        </div>
-							                                        <div class="col-md-4">
-							                                            <div th:if="${session.eventD.cantidadDisp>0}" class="form-group mt-4 mb-0">
-							                                            	<!-- <label class="small mb-1" for="inputCantidad"><b>Cantidad de Porciones</b></label> -->
-							                                            	<input type="number" min="1" class="form-control py-4" name="cantidadOrder" th:field="*{cantidad}" required/>
-							                                            </div>
-							                                        </div>
-							                                        <div  class="col-md-4">
-							                                            <div th:if="${session.eventD.cantidadDisp>0}" class="form-group mt-4 mb-0">
-							                                            	<button type="submit" class="btn btn-primary btn-block">Agregar pedido</button>
-							                                            </div>
-							                                        </div>
-					                                        </div>
-				                                        </form>
+	                                            <hr>  
+	                                            <label class="small mb-1" for="inputName"><b>Platillos del evento</b></label> 
+	                                            <table cellpadding="0"  id="example" name="dataTable" width="85%">
+				                                    <thead>
+				                                        <tr>
+				                                            <th>Nombre</th>
+				                                            <th>Descripción</th>
+				                                        </tr>
+				                                    </thead>
+				                                    <tbody>
+				                                    	<tr th:each="dishes: ${session.dishesFromEvent}">
+				                                    		<td th:text="${dishes.nombre}"/>
+				                                    		<td th:text="${dishes.descripcion}"/>
+				                                    	</tr>
+				                                    </tbody>
+				                                </table>
+			                                 	<hr> 
+	                                            <div class="form-row">
+		                                            <div class="col-md-6">
+			                                            <div class="form-group mt-4 mb-0">
+			                                            	<button type="button" class="btn btn-primary btn-block" onClick="location.href='myEvents.html'">Volver</button>
+			                                            </div>
 			                                        </div>
+			                                        <div class="col-md-6">
+			                                            <div th:if="${session.eventD.misParticipantes.empty}" class="form-group mt-4 mb-0">
+			                                            	<button type="submit" class="btn btn-primary btn-block">Editar Evento</button>
+			                                            </div>
+			                                            <div  th:if="${!session.eventD.misParticipantes.empty}" class="form-group mt-4 mb-0">
+			                                            	<button type="submit" class="btn btn-primary btn-block" title="No es posible editar el evento porque ya posee clientes" disabled>Editar evento</button>
+			                                            </div>
+			                                        </div>
+		                                        </div>
                                    			</div>
 	                               	 	</div>
 	                           	 	</div>

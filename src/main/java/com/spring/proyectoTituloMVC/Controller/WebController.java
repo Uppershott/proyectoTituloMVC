@@ -237,6 +237,24 @@ public class WebController {
 		}
 	}
 	
+	@GetMapping("/eventInfo.html")
+	public String eventInfo(Model model, HttpSession session) {
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
+			
+			model.addAttribute("eventUpdate", new Event());
+			return "eventInfo.html";
+		}
+	}
+	
+	@GetMapping("/eventDishEdit.html")
+	public String eventDishEdit(Model model, HttpSession session) {
+		return "eventDishEdit";
+	}
+	
 	@GetMapping("/eventCreate.html")
 	public String eventCreate(Model model, HttpSession session) {
 		
@@ -473,9 +491,13 @@ public class WebController {
 			}
 		}
 		
+		int cant = 0;
+		if(activeEvents.size()>=8) cant = 8;
+		if(activeEvents.size()<8) cant = activeEvents.size();
+		
 		//Random r = new Random();
 		System.out.println("Cantidad de eventos activos: "+activeEvents.size());
-		for(int i=0; i<8; i++) {
+		for(int i=0; i<cant; i++) {
 			//int nRandom = r.nextInt(((activeEvents.size()-2)-0)+1)-0;
 			System.out.println("activeEvents size: "+activeEvents.size());
 			indexEvents.add(activeEvents.get(i));

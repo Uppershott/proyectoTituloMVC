@@ -70,6 +70,7 @@
 	                                            		</div>
 	                                            	</div>
 	                                            </div>
+	                                            <hr>
 		                                            <label class="small mb-1" for="inputName">Platillos del evento</label>
 	                                            	<table cellpadding="0"  id="example" name="dataTable" width="85%">
 					                                    <thead>
@@ -85,28 +86,29 @@
 					                                    	</tr>
 					                                    </tbody>
 					                                </table>
+					                                <hr>
 					                                <div class="form-row">
-			                                			<div class="col-md-4"> 
+			                                			<div class="col-md-6"> 
 					                                		<div class="form-group">
-					                                			<label class="small mb-1" for="inputPrice">Cantidad de unidades reservada</label>
+					                                			<label class="small mb-1" for="inputPrice"><b>Cantidad de unidades reservada</b></label>
 					                                			<input class="form-control py-4"  type="text" th:value="${session.order.cantidad}" name="cantidadOrderDetail" readonly/>
 					                                		</div>
 					                                	</div>
-					                                	<div class="col-md-4"> 
+					                                	<div class="col-md-6"> 
 					                                		<div class="form-group">
-					                                			<label class="small mb-1" for="inputPrice">Costo total del pedido</label>
+					                                			<label class="small mb-1" for="inputPrice"><b>Costo total del pedido</b></label>
 					                                			<input class="form-control py-4"  type="text" th:value="${session.order.cantidad*session.eventD.precio}" name="totalCostOrderDetail" readonly/>
 					                                		</div>
 					                                	</div>
 					                                </div>
 					                                <div class="form-row">
-						                                <div class="col-md-4">
+						                                <div class="col-md-6">
 				                                            <div class="form-group mt-4 mb-0">
 				                                            	<button type="submit" class="btn btn-primary btn-block" onClick="location.href='myOrders.html'">Volver</button>
 				                                            </div>
 				                                        </div>
 				                                        
-					                                        <div class="col-md-4">
+					                                        <div class="col-md-6">
 								                                <div th:if="${session.eventD.habilitado}" class="form-group mt-4 mb-0">
 								                                <form action="cancelOrder" th:action="@{/cancelOrder}" method="get">
 					                                            	<button type="submit" class="btn btn-primary btn-block">Cancelar pedido</button>
@@ -118,14 +120,15 @@
 					                                            </div>
 				                                            </div>
 				                                       
-			                                            <div class="col-md-4">
-							                                <div th:if="${session.eventD.habilitado}" class="form-group mt-4 mb-0">
-				                                            	<button type="submit" class="btn btn-primary btn-block">Modificar pedido</button>
-				                                            </div>
+			                                            <!-- <div class="col-md-4">
+								                                <div th:if="${session.eventD.habilitado}" class="form-group mt-4 mb-0">
+					                                            	<button type="submit" class="btn btn-primary btn-block">Modificar pedido</button>
+					                                            </div>
 				                                            <div th:if="${!session.eventD.habilitado}" class="form-group mt-4 mb-0">
 				                                            	<button type="submit" class="btn btn-primary btn-block" title="El evento caducó o ha sido cerrado por lo que no se puede modificar el pedido" disabled>Modificar pedido</button>
 				                                            </div>
-			                                            </div>
+			                                            </div> 
+			                                            -->
 		                                            </div>
                                    			</div>
 	                               	 	</div>

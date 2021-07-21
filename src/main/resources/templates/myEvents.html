@@ -9,6 +9,7 @@
         <title>Emprendimientos Ya!</title>
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/profileStyle.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 </head>
@@ -35,6 +36,7 @@
 	                                            <th>Creación</th>
 	                                            <th>Término</th>
 	                                            <th>Precio unidad</th>
+	                                            <th>info.</th>
 	                                        </tr>
 	                                    </thead>
 	                                    <tbody>
@@ -44,6 +46,7 @@
 	                                    		<td th:text="${myAcEvents.fechaCreacion}"/>
 	                                    		<td th:text="${myAcEvents.fechaTermino}"/>
 	                                    		<td th:text="${myAcEvents.precio}"/>
+	                                    		<td><a th:href="|@{/eventUp/{id}(id=${myAcEvents.idEvent})}|"><span class="material-icons">info</span></a></td>
 	                                    	</tr>
 	                                    </tbody>
 	                                </table>

@@ -15,16 +15,17 @@
 	                          Ofertas!
 	                      </a>
 	                  </span>
+	                  <span th:if="${session.user.rol==2}">
+	                      <a class="nav-link" href="reports.html">
+	                          Información
+	                      </a>
+	                   </span>
 	                  <span th:if="${session.user.rol != 0}">
 	                      <a class="nav-link" href="events.html">
 	                          Eventos
 	                      </a>
 	                  </span>
-	                  <span th:if="${session.user.rol==2}">
-	                      <a class="nav-link" href="reports.html">
-	                          Informes
-	                      </a>
-	                   </span>
+	                  
 	                   <span th:if="${session.user.rol==1}">
 	                      <a class="nav-link" href="company.html">
 	                          Empresas
