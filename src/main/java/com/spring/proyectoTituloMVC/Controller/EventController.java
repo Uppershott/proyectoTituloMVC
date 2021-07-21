@@ -130,7 +130,7 @@ public class EventController {
 		}
 		
 		if(result.hasErrors()) {
-			return "eventinfo";
+			return "eventInfoEdit";
 		}
 		
 		eventAux.setNombre(event.getNombre());
@@ -140,10 +140,16 @@ public class EventController {
 		eventAux.setCantidadDisp(event.getCantidad());
 		eventAux.setHabilitado(true);
 		eventAux.setPrecio(event.getPrecio());
+		System.out.println("Seteados atributos de eventAux...");
 		
 		eventService.save(eventAux);
+		System.out.println("Guardado objeto eventAux en bdd...");
 		
-		return "myEvents";
+		session.setAttribute("eventD", eventAux);
+		System.out.println("Seteado atributo eventD en session...");
+		
+		System.out.println("Retornando a myEvents...");
+		return "eventInfo";
 	}
 	
 	@GetMapping("/removeDish/{id}")

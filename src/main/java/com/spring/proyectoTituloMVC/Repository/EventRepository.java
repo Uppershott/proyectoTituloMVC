@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.spring.proyectoTituloMVC.Entity.Event;
+import com.spring.proyectoTituloMVC.Entity.User;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event,Integer>{
@@ -15,9 +16,9 @@ public interface EventRepository extends JpaRepository<Event,Integer>{
 	
 	//@Query("select e from Event e where e.nombre = %:nombre%")
 	//List<Event> findByNombre(@Param("nombre") String nombre);
+	List<Event> findByEmpresa(User empresa);
 	Event findByNombre(String nombre);
 	List<Event> findByFechaCreacion(Date fechaCreacion);
-	List<Event> findByFechaInicio(Date fechaInicio);
 	List<Event> findByFechaTermino(Date fechaTermino);
 	List<Event> findByPrecio(Double precio);
 	

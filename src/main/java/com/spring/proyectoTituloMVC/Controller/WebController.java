@@ -15,9 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.spring.proyectoTituloMVC.Entity.User;
+import com.spring.proyectoTituloMVC.Entity.Contain;
 import com.spring.proyectoTituloMVC.Entity.Dish;
 import com.spring.proyectoTituloMVC.Entity.Event;
 import com.spring.proyectoTituloMVC.Entity.Participation;
+import com.spring.proyectoTituloMVC.Entity.PojoInfo;
+import com.spring.proyectoTituloMVC.Service.ContainService;
 import com.spring.proyectoTituloMVC.Service.DishService;
 import com.spring.proyectoTituloMVC.Service.EventService;
 import com.spring.proyectoTituloMVC.Service.ParticipationService;
@@ -38,6 +41,9 @@ public class WebController {
 	
 	@Autowired
 	ParticipationService participationService;
+	
+	@Autowired
+	ContainService containService;
 	
 	@GetMapping("/")
 	public String index(Model model, HttpSession session) throws ParseException{
@@ -68,6 +74,128 @@ public class WebController {
 		}
 		
 		return "index";
+	}
+	
+	@GetMapping("/info.html")
+	public String info(Model model, HttpSession session){
+		loadInfo(model,session);
+		return "info";
+	}
+	
+	public void loadInfo(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		
+		List<PojoInfo> dishesInfo = new ArrayList<PojoInfo>();
+		
+		List<Dish> allDishes = dishService.getAllDishes();
+		List<Contain> allContained = containService.getAllContains();
+		
+		List<Integer> contadorVeces = new ArrayList<Integer>(allDishes.size());
+		System.out.println("contadorVeces size: "+ contadorVeces.size());
+		
+		int total =0;
+		
+		for(int i=0; i<allDishes.size();i++) {
+			int cont=0;
+			for(int j=0; j<allContained.size();j++) {
+				if(allContained.get(j).getPlatilloContener().getId() == allDishes.get(i).getId()) {
+					cont++;
+				}
+			}
+			System.out.println("Platillo: "+ allDishes.get(i).getNombre()+" se repite: "+cont+" veces..");
+			contadorVeces.add(cont);
+			total+=cont;
+		}
+		System.out.println("Total de platillos utilizados: "+total);
+		model.addAttribute("total", total);
+		model.addAttribute("allDishes", allDishes);
+		model.addAttribute("contadorVeces", contadorVeces);
+		
+		List<Event> allEvents = eventService.getAllEvents();
+		List<Integer> contadorPrecio = new ArrayList<Integer>();
+		
+		System.out.println("allEvents size: "+allEvents.size());
+		System.out.println("contadorPrecio size: "+ contadorPrecio.size());
+		
+		for(int i=0; i<allDishes.size();i++) {
+			int precio=0;
+			for(int j=0; j<allContained.size();j++) {
+				if(allContained.get(j).getPlatilloContener().getId() == allDishes.get(i).getId()) {
+					precio+=allContained.get(j).getEventoContener().getPrecio();
+					System.out.println("Platillo: "+allDishes.get(i).getNombre()+" en evento: "+ allContained.get(j).getEventoContener().getNombre()+" a un precio de: "+allContained.get(j).getEventoContener().getPrecio());
+				}
+			}
+			if(contadorVeces.get(i)!=0) {
+				System.out.println("Platillo: "+allDishes.get(i).getNombre()+" precio promedio: "+precio/contadorVeces.get(i));
+				contadorPrecio.add(precio/contadorVeces.get(i));
+			}else {
+				System.out.println("Platillo: "+allDishes.get(i).getNombre()+" precio promedio: "+0);
+				contadorPrecio.add(0);
+			}
+		}
+		
+		model.addAttribute("contadorPrecio", contadorPrecio);
+		System.out.println("Agregado contadorPrecio a model...");
+		
+		System.out.println("total: "+total);
+		
+		
+		for(int i=0; i<allDishes.size();i++) {
+			PojoInfo dishPojo = new PojoInfo();
+			System.out.println("contadorVeces: "+contadorVeces.get(i));
+			double veces= contadorVeces.get(i);
+			double porcentaje = (veces/total)*100;
+			System.out.println("Platillo: "+ allDishes.get(i).getNombre()+" porcentaje: "+porcentaje+"%");
+			dishPojo.setTotalDishes(porcentaje);
+			dishPojo.setContPrecio(contadorPrecio.get(i));
+			dishPojo.setContVecesUso(contadorVeces.get(i));
+			dishPojo.setNombrePlatillo(allDishes.get(i).getNombre());
+			dishesInfo.add(dishPojo);
+		}
+		model.addAttribute("generalDishes", dishesInfo);
+		
+		List<Event> userEvents = eventService.getEventsByEmpresa(user);
+		List<Event> userEventsDis = new ArrayList<Event>();
+		System.out.println("userEvents size: "+userEvents.size());
+		
+		for(int i=0; i<userEvents.size();i++) {
+			if(!userEvents.get(i).isHabilitado()) {
+				userEventsDis.add(userEvents.get(i));
+				System.out.println("evento terminado: "+userEvents.get(i).getNombre());
+			}
+		}
+		int cantidadEventosVigentes = userEvents.size()-userEventsDis.size();
+		int cantidadEventosTerminados = userEventsDis.size();
+		model.addAttribute("cantEventosTerminados", cantidadEventosTerminados);
+		model.addAttribute("cantEventosVigentes", cantidadEventosVigentes);
+		model.addAttribute("userEventsDis", userEventsDis);
+		
+		int promVentas =0;
+		int promPrecios =0;
+		if(!userEventsDis.isEmpty()) {
+			for(int i=0;i<userEventsDis.size();i++) {
+				promVentas+= (userEventsDis.get(i).getCantidad()-userEventsDis.get(i).getCantidadDisp());
+				promPrecios+= userEventsDis.get(i).getPrecio();
+			}
+			if(userEventsDis.size()>0) {
+				System.out.println("Promedio de ventas: "+ promVentas/userEventsDis.size());
+				promVentas= promVentas/userEventsDis.size();
+				System.out.println("Promedio de precios: "+ promPrecios/userEventsDis.size());
+				promPrecios= promPrecios/userEventsDis.size();
+			}else {
+				System.out.println("Promedio de ventas: "+promVentas);
+				promVentas=0;
+				System.out.println("Promedio de precios: "+promPrecios);
+				promPrecios=0;
+			}
+			model.addAttribute("promVentas", promVentas);
+			model.addAttribute("promPrecios", promPrecios);
+			System.out.println("Agregado promVentas y promPrecios a model...");
+		}
+		
+		//List<Dish> allUserDishes = new ArrayList<Dish>();
+		
+		
 	}
 	
 	//nuevo
@@ -244,9 +372,24 @@ public class WebController {
 		if(user.getNombre()==null) {
 			return "401";
 		}else {
+			return "eventInfo.html";
+		}
+	}
+	
+	@GetMapping("/eventInfoEdit.html")
+	public String eventInfoEdit(Model model, HttpSession session) {
+		System.out.println("Ingresando a eventInfoEdit...");
+		
+		User user = (User) session.getAttribute("user");
+		if(user.getNombre()==null) {
+			return "401";
+		}else {
 			
 			model.addAttribute("eventUpdate", new Event());
-			return "eventInfo.html";
+			System.out.println("Agregado eventUpdate a mode...");
+			
+			System.out.println("Redirigiendo a eventInfoEdit...");
+			return "eventInfoEdit.html";
 		}
 	}
 	

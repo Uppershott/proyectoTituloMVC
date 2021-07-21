@@ -25,84 +25,51 @@
 						<div class="row justify-content-center">
                             <div class="col-lg-7">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Detalle del evento</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Edición de Evento</h3></div>
 	                                   	<div class="card-body">
                                         	<div align=center class="form-group">
 			                                 	<form action="editEventDetail" th:action="@{/editEventDetail}" th:object="${eventUpdate}" method="post">
 				                                 	<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
 		    											<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
 				  									</div>
-	                                        		<div class="form-row">
-			                                            <div class="col-md-6">
-						  									<div class="form-group">
-				                                                <label class="small mb-1" for="inputName">Nombre del evento</label>
-				                                                <input class="form-control py-4"  type="text" th:field="*{nombre}" th:value="${session.eventD.nombre}" name="nameEventDetail"/>
-				                                    		</div>
-				                                    	</div>
-				                                    	<div class="col-md-6">
-				                                    		<div class="form-group">
-			                                                	<label class="small mb-1" for="inputNameComp">Nombre de la empresa</label>
-			                                                	<input class="form-control py-4"  type="text" th:value="${session.eventD.empresa.nombre}" name="nameEventCompDetail" readonly/>
-			                                    			</div>
-			                                    		</div>
-			                                    	</div>
-			                                    	<div class="form-group">
-		                                                <label class="small mb-1" for="inputAddress">Direción de la Empresa</label>
-		                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.empresa.direccion}" name="addressEventCompDetail" readonly/>
+				  									<div class="form-group">
+		                                                <label class="small mb-1" for="inputName">Nombre del evento</label>
+		                                                <input class="form-control py-4"  type="text" th:field="*{nombre}" th:placeholder="${session.eventD.nombre}" name="nameEventDetail" required/>
 		                                    		</div>
 		                                    		<div class="form-group">
 		                                                <label class="small mb-1" for="inputDescription">Descripción del evento</label>
-		                                                <input class="form-control py-4"  type="text" th:field="*{descripcion}" th:value="${session.eventD.descripcion}" name="descriptionEventDetail"/>
+		                                                <input class="form-control py-4"  type="text" th:field="*{descripcion}" th:placeholder="${session.eventD.descripcion}" name="descriptionEventDetail" required/>
 		                                    		</div>
 		                                            <div class="form-row">
 		                                            	<div class="col-md-4">
 		                                            		<div class="form-group">
 		                                                		<label class="small mb-1" for="inputDate">Fecha de término</label>
-		                                               			<input class="form-control py-4"  type="date" th:field="*{fechaTermino}" th:value="${session.eventD.fechaTermino}" name="dateEventDetail"/>
+		                                               			<input class="form-control py-4"  type="date" th:field="*{fechaTermino}" th:placeholder="${session.eventD.fechaTermino}" name="dateEventDetail" required/>
 		                                        			</div>
 		                                            	</div>
 		                                                <div class="col-md-4">
 		                                                	<div class="form-group">
 		                                               			<label class="small mb-1" for="inputCantidad">Cantidad de pedidos</label>
-		                                                		<input class="form-control py-4"  type="text" th:field="*{cantidad}" th:value="${session.eventD.cantidad}" name="cantidadEventDetail" />
+		                                                		<input class="form-control py-4"  type="number" th:field="*{cantidad}" th:placeholder="${session.eventD.cantidad}" name="cantidadEventDetail" required/>
 		                                            		</div>
 		                                            	</div>
 		                                            	<div class="col-md-4">
 		                                                	<div class="form-group">
 		                                               			<label class="small mb-1" for="inputPrice">Precio del evento</label>
-		                                                		<input class="form-control py-4"  type="text" th:field="*{precio}" th:value="${session.eventD.precio}" name="priceEventDetail" />
+		                                                		<input class="form-control py-4"  type="number" th:field="*{precio}" th:placeholder="${session.eventD.precio}" name="priceEventDetail" required/>
 		                                            		</div>
 		                                            	</div>
 		                                            </div>
-		                                            <hr>  
-		                                            <label class="small mb-1" for="inputName">Platillos del evento</label> 
-		                                            <table cellpadding="0"  id="example" name="dataTable" width="85%">
-					                                    <thead>
-					                                        <tr>
-					                                            <th>Nombre</th>
-					                                            <th>Descripción</th>
-					                                        </tr>
-					                                    </thead>
-					                                    <tbody>
-					                                    	<tr th:each="dishes: ${session.dishesFromEvent}">
-					                                    		<td th:text="${dishes.nombre}"/>
-					                                    		<td th:text="${dishes.descripcion}"/>
-					                                    	</tr>
-					                                    </tbody>
-					                                </table>
 				                                 	<hr> 
 		                                            <div class="form-row">
 			                                            <div class="col-md-6">
 				                                            <div class="form-group mt-4 mb-0">
-				                                            	<button type="button" class="btn btn-primary btn-block" onClick="location.href='myEvents.html'">Volver</button>
+				                                            	<button type="button" class="btn btn-primary btn-block" onClick="location.href='eventInfo.html'">Cancelar</button>
 				                                            </div>
 				                                        </div>
 				                                        <div class="col-md-6">
-				                                            <div th:if="${session.eventD.misParticipantes.empty}" class="form-group mt-4 mb-0">
-				                                            	<button type="submit" class="btn btn-primary btn-block">Editar Evento</button>
-				                                            </div>
-				                                            <div  th:if="${!session.eventD.misParticipantes.empty}" class="form-group mt-4 mb-0">
-				                                            	<button type="submit" class="btn btn-primary btn-block" title="No es posible editar el evento porque ya posee clientes" disabled>Editar evento</button>
+				                                            <div class="form-group mt-4 mb-0">
+				                                            	<button type="submit" class="btn btn-primary btn-block">Guardar Cambios</button>
 				                                            </div>
 				                                        </div>
 			                                        </div>
@@ -120,29 +87,11 @@
 	         
 	     </div>
 	     <script>
-	     	$(document).ready(function(){
-        		$("#reira").on('change', function(){
-        			$(".data").hide();
-        			$("#" + $(this).val()).show();
-        		}).change();
-        	});
-			
-	     </script>
-	     <script>
 			$(document).ready(function() {
 			$('table#example').DataTable({
   			  
 	   		 "searching": false });
 			});
-		</script>
-		<script>
-	     	function openForm(){
-	     		document.getElementById("myForm").style.display = "block";
-	     	}
-	     	
-	     	function closeForm(){
-	     		document.getElementById("myForm").style.display = "none";
-	     	}
 		</script>
 	     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

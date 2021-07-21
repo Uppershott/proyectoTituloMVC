@@ -28,23 +28,9 @@
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Detalle del evento</h3></div>
 	                                   	<div class="card-body">
                                         	<div align=center class="form-group">
-                                        		<div class="form-row">
-		                                            <div class="col-md-6">
-					  									<div class="form-group">
-			                                                <label class="small mb-1" for="inputName">Nombre del evento</label>
-			                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.nombre}" name="nameEventDetail" readonly/>
-			                                    		</div>
-			                                    	</div>
-			                                    	<div class="col-md-6">
-			                                    		<div class="form-group">
-		                                                	<label class="small mb-1" for="inputNameComp">Nombre de la empresa</label>
-		                                                	<input class="form-control py-4"  type="text" th:value="${session.eventD.empresa.nombre}" name="nameEventCompDetail" readonly/>
-		                                    			</div>
-		                                    		</div>
-		                                    	</div>
-		                                    	<div class="form-group">
-	                                                <label class="small mb-1" for="inputAddress">Direción de la Empresa</label>
-	                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.empresa.direccion}" name="addressEventCompDetail" readonly/>
+			  									<div class="form-group">
+	                                                <label class="small mb-1" for="inputName">Nombre del evento</label>
+	                                                <input class="form-control py-4"  type="text" th:value="${session.eventD.nombre}" name="nameEventDetail" readonly/>
 	                                    		</div>
 	                                    		<div class="form-group">
 	                                                <label class="small mb-1" for="inputDescription">Descripción del evento</label>
@@ -95,7 +81,7 @@
 			                                        </div>
 			                                        <div class="col-md-6">
 			                                            <div th:if="${session.eventD.misParticipantes.empty}" class="form-group mt-4 mb-0">
-			                                            	<button type="submit" class="btn btn-primary btn-block">Editar Evento</button>
+			                                            	<button type="button" class="btn btn-primary btn-block" onClick="location.href='eventInfoEdit.html'">Editar Evento</button>
 			                                            </div>
 			                                            <div  th:if="${!session.eventD.misParticipantes.empty}" class="form-group mt-4 mb-0">
 			                                            	<button type="submit" class="btn btn-primary btn-block" title="No es posible editar el evento porque ya posee clientes" disabled>Editar evento</button>

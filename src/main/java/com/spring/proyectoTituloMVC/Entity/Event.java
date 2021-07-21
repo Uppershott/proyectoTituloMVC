@@ -42,19 +42,10 @@ public class Event implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date fechaCreacion;
 	
-	@Column (name="fechaInicio")
-	@Temporal(TemporalType.DATE)
-	private Date fechaInicio;
-	
 	@Column (name="fechaTermino")
 	//@DateTimeFormat(pattern = "dd/MM/yyyy")
 	//@Temporal(TemporalType.DATE)
 	private String fechaTermino;
-	
-	//posible a salir de acá
-	@Column (name="detalle")
-	private String detalle;
-	
 	
 	@Column (name="precio")
 	private int precio;
@@ -111,28 +102,12 @@ public class Event implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Date getFechaInicio() {
-		return fechaInicio;
-	}
-
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
 	public String getFechaTermino() {
 		return fechaTermino;
 	}
 
 	public void setFechaTermino(String fechaTermino) {
 		this.fechaTermino = fechaTermino;
-	}
-
-	public String getDetalle() {
-		return detalle;
-	}
-
-	public void setDetalle(String detalle) {
-		this.detalle = detalle;
 	}
 
 	public int getPrecio() {

@@ -19,87 +19,112 @@
 	        <div id="layoutSidenav_content">
 	            <main>
 					<div class="container">
-					    <div class="main-body">
-					          <div class="row gutters-sm">
-					            <div class="col-md-8">
-					              <div class="card mb-3">
-					                <div class="card-body">
-					                  <form action="profileEditing" th:action="@{/profileEditing}" th:object="${userEdit}" method="post">
-						                  <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-	    										<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
-			  								</div>
-						                  <div class="row">
-							                    <div class="col-sm-3">
-							                    	<h6 class="mb-0" th:if="${session.user.rol==1}">Nombre y Apellido</h6>
-							                      	<h6 class="mb-0" th:if="${session.user.rol==2}">Nombre de la Empresa</h6>
-							                    </div>
-							                    <input class="col-sm-9 text-secondary" type="text" th:field="*{Nombre}" maxlength="100" placeholder="Ingrese el nuevo nombre..."required>
-						                  </div>
-						                  <hr>
-						                  <div class="row">
-						                    <div class="col-sm-3">
-						                      <h6 class="mb-0" th:if="${session.user.rol==1}">Correo</h6>
-						                      <h6 class="mb-0" th:if="${session.user.rol==2}">Correo de la Empresa</h6>
-						                    </div>
-						                    <input class="col-sm-9 text-secondary" type="email" th:field="*{correo}" placeholder="Ingrese el nuevo correo..." required>
-						                  </div>
-						                  <hr>
-						                  <div class="row">
-						                    <div class="col-sm-3">
-						                      <h6 class="mb-0"  th:if="${session.user.rol==1}">Teléfono de Contacto</h6>
-						                      <h6 class="mb-0"  th:if="${session.user.rol==2}">Teléfono de la Empresa</h6>
-						                    </div>
-						                    <input class="col-sm-9 text-secondary" type="tel" th:field="*{telefono}" pattern="[0-9]{8}" maxlength="8" placeholder="Ingrese el nuevo teléfono"required>
-						                  </div>
-						                  <hr>
-						                  <div class="row">
-						                    <div class="col-sm-3">
-						                      <h6 class="mb-0" th:if="${session.user.rol==1}">Dirección</h6>
-						                      <h6 class="mb-0" th:if="${session.user.rol==2}">Dirección de la Empresa</h6>
-						                    </div>
-						                    <input class="col-sm-9 text-secondary" th:field="*{direccion}" maxlength="200" placeholder="Ingrese la nueva dirección..." required>
-						                  </div>
-						                  <div th:if="${session.user.rol==2}">
-							                  <hr>
-							                  	<div class="row" >
-							                    <div class="col-sm-3">
-							                      <h6 class="mb-0" >URL Sitio WEB de la Empresa</h6>
-							                    </div>
-							                    <input class="col-sm-9 text-secondary" th:field="*{link1}">
-							                  </div>
-						                  </div>
-						                  <hr>
-						                  <div class="row">
-						                    <div class="col-sm-3">
-						                      <h6 class="mb-0">@ Instagram</h6>
-						                    </div>
-						                    <input class="col-sm-9 text-secondary" type="text" th:field="*{link2}" placeholder="@ Instagram">
-						                  </div>
-						                  <hr>
-						                  <div class="row">
-						                    <div class="col-sm-3">
-						                      <h6 class="mb-0">Facebook</h6>
-						                    </div>
-						                    <input class="col-sm-9 text-secondary" th:field="*{link3}" placeholder="Ingrese su nombre en Facebook...">
-						                  </div>
-						                  <hr>
-						                  <div class="row">
-						                  	<div class="col-sm-12">
-						                      <button class="btn btn-info " onClick="history.back()">Cancelar</button>
-						                    </div>
-						                    <div class="col-sm-12">
-						                      <button class="btn btn-info " type="submit">Guardar Cambios</button>
-						                    </div>
-						                    
-						                  </div>
-						                  <hr>
-					                 </form>
-					                </div>
-					                 
-					              </div>
-					            </div>
-					          </div>
-					        </div>
+						<div class="row justify-content-center">
+                            <div class="col-lg-7">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+									<div class="card-header"><h3 class="text-center font-weight-light my-4">Editando Datos Personales</h3></div>
+									<div class="card-body">
+										<form action="profileEditing" th:action="@{/profileEditing}" th:object="${userEdit}" method="post">
+					                        <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+												<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>    
+											</div>
+											<div class="form-row">
+												<div class="col-md-6">
+													<div class="form-group">
+							                             <label class="small mb-1" for="inputName" th:if="${session.user.rol==1}">*Nombre y Apellidos</label>
+							                             <label class="small mb-1" for="inputName" th:if="${session.user.rol==2}">*Nombre de la Empresa</label>
+							                             <input class="form-control py-4"  type="text" th:field="*{nombre}" name="nameEDit" maxlength="100" th:placeholder="${session.user.nombre}" required/>
+							                 		</div>
+					                        	</div>
+					                            <div class="col-md-6">
+					                            	<div class="form-group">
+					                           			<label class="small mb-1" for="inputPhoneNumber" th:if="${session.user.rol==1}">*Teléfono de Contacto</label>
+					                           			<label class="small mb-1" for="inputPhoneNumber" th:if="${session.user.rol==2}">*Teléfono de la Empresa</label>
+					                            		<input class="form-control py-4" type="tel" th:field="*{telefono}" name="telefonoEdit" required pattern="[0-9]{8}" maxlength="8" th:placeholder="'+569 '+${session.user.telefono}"/>
+					                        		</div>
+					                        	</div>
+					                        </div>
+					                        <div th:if="${session.user.rol==1}" class="form-group">
+					                        	<label class="small mb-1" for="inputEmailAddress">*Correo</label>
+					                        	<input class="form-control py-4" type="email" th:field="*{correo}" name="emailEDit" th:placeholder="${session.user.correo}" required/>
+					                        </div>
+					                        <div th:if="${session.user.rol==2}" class="form-row">
+					                        	<div class="col-md-6">
+							                        <div class="form-group">
+							                        	<label class="small mb-1" for="inputEmailAddress" th:if="${session.user.rol==1}">*Correo</label>
+							                        	<label class="small mb-1" for="inputEmailAddress" th:if="${session.user.rol==2}">*Correo de la Empresa</label>
+							                        	<input class="form-control py-4" type="email" th:field="*{correo}" name="emailEDit" th:placeholder="${session.user.correo}" required/>
+							                        </div>
+						                        </div>
+						                        <div class="col-md-6">
+	                                            	<div class="form-group">
+	                                            		<label class="small mb-1" for="inputRubro">*Rubro</label>
+	                                            		<select th:field="*{rubro}" class="form-control" name="rubroSelection" id="rubroSelection" required>
+	                                            			<option value="5" selected>Otro</option>
+	                                            			<option value="1">Restaurante</option>
+	                                            			<option value="2">Cafetería</option>
+	                                            			<option value="3">Delivery</option>
+	                                            			<option value="4">Negocio pequeño</option>
+	                                            		</select>
+	                                            	</div>
+	                                            </div>
+					                        </div>
+					                        <div class="form-group">
+					                            <label class="small mb-1" for="inputAddress" th:if="${session.user.rol==1}">*Dirección</label>
+					                            <label class="small mb-1" for="inputAddress" th:if="${session.user.rol==2}">*Dirección de la Empresa</label>
+					                            <input class="form-control py-4" type="text" th:field="*{direccion}" name="addressEdit" required maxlength="200" th:placeholder="${session.user.direccion}" />
+					                        </div>
+					                        <div  th:if="${session.user.rol==2}"  class="form-row">
+					                        	<div class="col-md-4">
+							                        <div class="form-group">
+							                               <label class="small mb-1" for="inputPassword">*URL Sitio Web de la Empresa</label>
+							                               <input class="form-control py-4" type="text" th:field="*{link1}" name="link1Edit" th:placeholder="${session.user.link1}"/>
+							                        </div>
+					                        	</div>
+					                        	<div class="col-md-4">
+							                        <div class="form-group">
+							                               <label class="small mb-1" for="inputPassword">*@ Instagram</label>
+							                               <input class="form-control py-4" type="text" th:field="*{link2}" name="link2Edit" th:placeholder="'@'+${session.user.link2}"/>
+							                        </div>
+						                        </div>
+						                        <div class="col-md-4">
+							                        <div class="form-group">
+							                               <label class="small mb-1" for="inputPassword">*@ Facebook</label>
+							                               <input class="form-control py-4" type="text" th:field="*{link3}" name="link3Edit" th:placeholder="'/'+${session.user.link3}"/>
+							                        </div>
+						                        </div>
+					                        </div>
+					                        <div  th:if="${session.user.rol==1}"  class="form-row">
+					                        	<div class="col-md-6">
+							                        <div class="form-group">
+							                               <label class="small mb-1" for="inputPassword">*@ Instagram</label>
+							                               <input class="form-control py-4" type="text" th:field="*{link2}" name="link2Edit" th:placeholder="'@'+${session.user.link2}"/>
+							                        </div>
+						                        </div>
+						                        <div class="col-md-6">
+							                        <div class="form-group">
+							                               <label class="small mb-1" for="inputPassword">*/ Facebook</label>
+							                               <input class="form-control py-4" type="text" th:field="*{link3}" name="link3Edit" th:placeholder="'/'+${session.user.link3}"/>
+							                        </div>
+						                        </div>
+					                        </div>
+					                        <div class="form-row">
+					                        	<div class="col-md-6">
+						                        	<div class="form-group mt-4 mb-0">
+						                          		<button type="submit" class="btn btn-primary btn-block" onClick="history.back()">Cancelar</button>
+						                          	</div>
+						                      	</div>
+						                      	<div class="col-md-6">
+						                          	<div class="form-group mt-4 mb-0">
+						                          		<button type="submit" class="btn btn-primary btn-block">Guardar Cambios</button>
+						                          	</div>
+						                      	</div>
+					                     	</div>
+					                   </form>
+	                   				</div>
+	                   			</div>
+	                   		</div>
+	                   </div>
 				    </div>
 	            </main>
 	         </div>

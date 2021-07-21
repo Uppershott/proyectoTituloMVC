@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.proyectoTituloMVC.Entity.Event;
+import com.spring.proyectoTituloMVC.Entity.User;
 import com.spring.proyectoTituloMVC.Repository.EventRepository;
 
 @Service
@@ -35,11 +36,6 @@ public class EventService {
 		return events;
 	}
 	
-	public List<Event> getEventsByFechaInicio(Date fechaInicio){
-		List<Event> events = eventRepository.findByFechaInicio(fechaInicio);
-		return events;
-	}
-	
 	public List<Event> getEventsByFechaTermino(Date fechaTermino){
 		List<Event> events = eventRepository.findByFechaTermino(fechaTermino);
 		return events;
@@ -47,6 +43,11 @@ public class EventService {
 	
 	public List<Event> getEventsByPrecio(Double precio){
 		List<Event> events = eventRepository.findByPrecio(precio);
+		return events;
+	}
+	
+	public List<Event> getEventsByEmpresa(User empresa){
+		List<Event> events = eventRepository.findByEmpresa(empresa);
 		return events;
 	}
 	
