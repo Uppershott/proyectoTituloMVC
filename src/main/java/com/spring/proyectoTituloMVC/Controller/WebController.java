@@ -82,6 +82,12 @@ public class WebController {
 		return "info";
 	}
 	
+	@GetMapping("/myInfo.html")
+	public String myInfo(Model model, HttpSession session) {
+		loadInfo(model,session);
+		return "myInfo";
+	}
+	
 	public void loadInfo(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		
@@ -156,12 +162,16 @@ public class WebController {
 		
 		List<Event> userEvents = eventService.getEventsByEmpresa(user);
 		List<Event> userEventsDis = new ArrayList<Event>();
+		List<Event> userEventsEna = new ArrayList<Event>();
 		System.out.println("userEvents size: "+userEvents.size());
 		
 		for(int i=0; i<userEvents.size();i++) {
 			if(!userEvents.get(i).isHabilitado()) {
 				userEventsDis.add(userEvents.get(i));
 				System.out.println("evento terminado: "+userEvents.get(i).getNombre());
+			}else {
+				userEventsEna.add(userEvents.get(i));
+				System.out.println("evento vigente: "+userEvents.get(i).getNombre());
 			}
 		}
 		int cantidadEventosVigentes = userEvents.size()-userEventsDis.size();
@@ -169,6 +179,7 @@ public class WebController {
 		model.addAttribute("cantEventosTerminados", cantidadEventosTerminados);
 		model.addAttribute("cantEventosVigentes", cantidadEventosVigentes);
 		model.addAttribute("userEventsDis", userEventsDis);
+		model.addAttribute("userEventsEna", userEventsEna);
 		
 		int promVentas =0;
 		int promPrecios =0;

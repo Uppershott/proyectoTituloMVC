@@ -71,7 +71,7 @@
 	                                            	</div>
 	                                            </div>
 	                                            <hr>
-		                                            <label class="small mb-1" for="inputName">Platillos del evento</label>
+		                                            <label class="small mb-1" for="inputName">*Platillos del evento</label>
 	                                            	<table cellpadding="0"  id="example" name="dataTable" width="85%">
 					                                    <thead>
 					                                        <tr>
@@ -115,6 +115,36 @@
 					                                        </div>
 				                                        </form>
 			                                        </div>
+			                                        <hr>
+			                                        <div th:if="${session.user.idCliente==session.eventD.empresa.idCliente}">
+				                                        <div th:if="${!session.clients.empty}">
+				                                        	<label class="small mb-1" for="inputName">*Clientes del Evento</label>
+			                                            	<table cellpadding="0"  id="example" name="dataTable" width="85%">
+							                                    <thead>
+							                                        <tr>
+							                                            <th>Nombre</th>
+							                                            <th><center>Cantidad pedidos</center></th>
+							                                            <th><center>Costo total</center></th>
+							                                        </tr>
+							                                    </thead>
+							                                    <tbody>
+							                                    	<tr th:each="clients: ${session.clients}" th:if="${clients.vigente}">
+							                                    		<td th:text="${clients.cliente.nombre}"/>
+							                                    		<td style="text-align: center" th:text="${clients.cantidad}"/>
+							                                    		<td style="text-align: center" th:text="'$'+${clients.cantidad*clients.evento.precio}"/>
+							                                    	</tr>
+							                                    </tbody>
+							                                </table>
+				                                        </div>
+				                                        <div th:if="${session.clients.empty}">
+				                                        	<label class="small mb-1" for="inputName">El evento no posee clientes</label>
+				                                        </div>
+				                                     </div>
+				                                     <div class="col-md-6">
+				                                            <div class="form-group mt-4 mb-0">
+				                                            	<button type="submit" class="btn btn-primary btn-block" onClick="location.href='myEvents.html'">Volver</button>
+				                                            </div>
+				                                    </div>
                                    			</div>
 	                               	 	</div>
 	                           	 	</div>

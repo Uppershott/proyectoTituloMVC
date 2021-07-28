@@ -3,6 +3,7 @@
 <head th:fragment="head">
 <meta charset="utf-8">
 <link href="css/styles.css" rel="stylesheet" />
+<link href="css/card.css" rel="stylesheet" />
 <title>Emprendimientos Ya!</title>
 </head>
 <body>
@@ -38,9 +39,7 @@
 	                    <span th:if="${session.user.rol == 1}">
 	                    	<a class="dropdown-item" href="myOrders.html">Mis Pedidos</a>
 	                    </span>
-	                    <span th:if="${session.user.rol == 2}">
-	                    	<a class="dropdown-item" href="myEvents.html">Mis Eventos</a>
-	                    </span>
+	                    <div class="dropdown-divider"></div>
 	                    <a class="dropdown-item" href="login.html">Salir</a>
                 	</span>
                 	<span th:unless="${session.user.nombre != null}">

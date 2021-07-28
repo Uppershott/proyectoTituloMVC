@@ -417,11 +417,20 @@ public class EventController {
 			System.out.println("Platillo: "+dishesFromEvent.get(i).getNombre()+" agregado a dishesFromEvent...");
 		}
 		
+		List<Participation> partEvent = participationService.getParticipationByEvento(event);
+		/*List<User> clients = new ArrayList<User>();
+		
+		for(int i=0; i<partEvent.size(); i++) {
+			clients.add(partEvent.get(i).getCliente());
+			System.out.println("Cliente: "+ clients.get(i).getNombre()+" participó en evento "+partEvent.get(i).getEvento().getNombre());
+		}*/
+		
 		System.out.println("Participantes size: "+event.getMisParticipantes().size());
 		
+		session.setAttribute("clients", partEvent);
 		session.setAttribute("eventD", event);
 		session.setAttribute("dishesFromEvent", dishesFromEvent);
-		System.out.println("Agregados dishesFromEvent y eventD a session...");
+		System.out.println("Agregados dishesFromEvent, eventD y clients a session...");
 	}
 	
 	public void loadDishes(Model model, HttpSession session) {

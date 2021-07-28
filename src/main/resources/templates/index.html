@@ -8,6 +8,7 @@
         <meta name="author" content="" />
         <title>Emprendimientos Ya!</title>
         <link href="css/styles.css" rel="stylesheet" />
+        <link href="css/card.css" rel="stylesheet" />
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -17,29 +18,21 @@
 	        <div th:replace="Layout/body :: body"></div>
 	        <div id="layoutSidenav_content">
 	            <main>
-	                <div class="container-fluid">
-	                    <h1 class="mt-4">Ofertas del Día!</h1>
-	                    <!-- 
-	                     <ol class="breadcrumb mb-4">
-	                         <li class="breadcrumb-item active">Dashboard</li>
-	                     </ol>
-	                      -->
-	                    <div class="row">
-	                        <div th:if="${session.indexEvents!=empty}" th:each="indexEvent: ${session.indexEvents}" class="col-xl-3 col-md-6">
-	                            <div class="card bg-warning text-white mb-4">
-	                                <div class="card-body"><label th:text="${indexEvent.nombre}"></label></div>
-	                                <div class="card-footer d-flex align-items-center justify-content-between">
-	                                    <label th:text="${indexEvent.descripcion}"></label><br>
-	                                    <label th:text="${indexEvent.fechaTermino}"></label><br>
-	                                    <label th:text="${indexEvent.empresa.nombre}"></label><br>
-	                                    <a class="small text-white stretched-link" href="#">Ver Detalles</a>
-	                                    <div class="small text-white"><i class="fas fa-angle-right" ></i></div>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                   
-	                </div>
+	            	<div class="container-fluid">
+	            		<h1 class="mt-4">Eventos!</h1>
+	                	<div class="container" th:if="${session.indexEvents!=empty}">
+	                		<div class="card" th:each="indexEvent: ${session.indexEvents}">
+							    <div class="box">
+							      <div class="content">
+							        <h2 th:text="${indexEvent.cantidadDisp}"></h2>
+							        <h3 th:text="${indexEvent.nombre}"></h3>
+							        <p><label th:text="'La empresa '+${indexEvent.empresa.nombre}+' creó el evento '+${indexEvent.nombre}+', el cual tiene un costo de $'+${indexEvent.precio}+' y quedan '+${indexEvent.cantidadDisp}+' porciones!'"></label></p>
+							        <a th:href="|@{/eventDet/{id}(id=${indexEvent.idEvent})}|">Ver detalles</a>
+							      </div>
+							    </div>
+							 </div>
+	                	</div>
+	                 </div>
 	            </main>
 	            <footer  th:replace="Layout/footer :: footer">
 	            </footer>

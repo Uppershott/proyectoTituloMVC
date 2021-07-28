@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="body">
 <meta charset="utf-8">
+
 <title>Emprendimientos Ya!</title>
 </head>
 <body>
@@ -10,17 +11,33 @@
               <div class="sb-sidenav-menu">
                   <div class="nav">
                       <div class="sb-sidenav-menu-heading">Inicio</div>
-	                  <span th:if="${session.user.rol==1}">
 	                      <a class="nav-link" href="index.html">
 	                          Ofertas!
 	                      </a>
-	                  </span>
 	                  <span th:if="${session.user.rol==2}">
-	                      <a class="nav-link" href="info.html">
-	                          Información
-	                      </a>
+	                      <a class="nav-link collapsed" href="info.html" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                Información
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="info.html">General</a>
+                                    <a class="nav-link" href="myInfo.html">Mi Información</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="events.html" data-toggle="collapse" data-target="#collapseLayouts2" aria-expanded="false" aria-controls="collapseLayouts2">
+                                Eventos
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts2" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                	<a class="nav-link" href="events.html">Todos</a>
+                                    <a class="nav-link" href="myEvents.html">Mis Eventos</a>
+                                </nav>
+                            </div>
 	                   </span>
-	                  <span th:if="${session.user.rol != 0}">
+	                   
+	                  <span th:if="${session.user.rol != 2}">
 	                      <a class="nav-link" href="events.html">
 	                          Eventos
 	                      </a>

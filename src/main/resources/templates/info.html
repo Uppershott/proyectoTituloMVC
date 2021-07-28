@@ -43,67 +43,11 @@
 	                                    		<td th:text="${genDish.nombrePlatillo}"/>
 	                                    		<td style="text-align:center" th:text="${genDish.contVecesUso}"/>
 	                                    		<td style="text-align:center" th:text="${genDish.totalDishes} +'%'"/>
-	                                    		<td style="text-align:center" th:text="'$'+${genDish.contPrecio}"/>
+	                                    		<td style="text-align:right" th:text="'$'+${genDish.contPrecio}"/>
 	                                    	</tr>
 	                                    </tbody>
 	                                </table>
 	                                <hr>
-	                                <ol class="breadcrumb mb-4">
-			                    		<li class="breadcrumb-item active"><b>Datos de la Empresa</b></b></li>
-			                 		</ol>
-			                 		<div class="card-body">
-			                 			<div align=center class="form-group">
-			                 			
-					                 		<div class="form-row">
-		                                       	<div class="col-md-3">
-		  											<div class="form-group">
-		                                               <label class="small mb-1" for="inputName">Cantidad de Eventos Terminados</label>
-		                                               <input style="text-align:center" class="form-control py-4"  type="text" th:value="${cantEventosTerminados}" name="cantEventosInfo" readonly/>
-		                                   			</div>
-		                                   		</div>
-		                                   		<div class="col-md-3">
-			                                   		<div class="form-group">
-		                                              	<label class="small mb-1" for="inputNameComp">Cantidad de Eventos Vigentes</label>
-		                                              	<input style="text-align:center" class="form-control py-4"  type="text" th:value="${cantEventosVigentes}" name="cantEventosVInfo" readonly/>
-		                                  			</div>
-		                                  		</div>
-		                                  		<div class="col-md-3">
-			                                  		<div class="form-group">
-				                                        <label class="small mb-1" for="inputAddress">Promedio de Ventas</label>
-				                                        <input style="text-align:center" class="form-control py-4"  type="text" th:value="${promVentas}" name="promVentasInfo" readonly/>
-				                               		</div>
-			                               		</div>
-			                               		<div class="col-md-3">
-				                               		<div class="form-group">
-				                                         <label class="small mb-1" for="inputDescription">Promedio de Precios</label>
-				                                         <input style="text-align:center" class="form-control py-4"  type="text" th:value="'$'+${promPrecios}" name="promPreciosIngo" readonly/>
-				                               		</div>
-			                               		</div>
-		                                  	</div>
-	                               		</div>
-	                               		
-                               		</div>
-                               		<center><label class="small mb-1" for="inputName">*Eventos Terminados</label></center>
-                               		<table style="text-align:center" title="Eventos terminados" cellpadding="0"  id="example" name="dataTable" width="95%">
-	                                    <thead>
-	                                        <tr>
-	                                            <th>Nombre del Evento</th>
-	                                            <th>Descripcion</th>
-	                                            <th>Fecha Término</th>
-	                                            <th>Precio</th>
-	                                            <th>Cantidad Porciones</th>
-	                                        </tr>
-		                                    </thead>
-		                                    <tbody>
-		                                    	<tr th:each="eventsDis: ${userEventsDis}">
-		                                    		<td th:text="${eventsDis.nombre}"/>
-		                                    		<td th:text="${eventsDis.descripcion}"/>
-		                                    		<td style="text-align:center" th:text="${eventsDis.fechaTermino}"/>
-		                                    		<td style="text-align:center" th:text="'$'+${eventsDis.precio}"/>
-		                                    		<td style="text-align:center" th:text="${eventsDis.cantidad}"/>
-		                                    	</tr>
-		                                    </tbody>
-	                                	</table>
 	                            </div>
 	                        </div> 
 	                    </div>

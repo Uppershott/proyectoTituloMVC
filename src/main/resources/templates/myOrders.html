@@ -20,7 +20,7 @@
 	            <main>
 					<div class="container-fluid">
 						<ol class="breadcrumb mb-4">
-                    		<li class="breadcrumb-item active">Mis Pedidos</li>
+                    		<li class="breadcrumb-item active"><b>Mis Pedidos</b></li>
                  		</ol>
 					        <div class="card mb-4">
 	                        <div class="card-body">
@@ -29,22 +29,22 @@
 	                                    <thead>
 	                                        <tr>
 	                                            <th>Nombre del Evento</th>
-	                                            <th>Nombre de la empresa</th>
-	                                            <th>Dirección del Evento</th>
-	                                            <th>Porciones reservadas</th>
-	                                            <th>Precio por porción</th>
-	                                            <th>Terminado</th>
+	                                            <th><center>Nombre de la empresa</center></th>
+	                                            <th><center>Dirección del Evento</center></th>
+	                                            <th><center>Porciones reservadas</center></th>
+	                                            <th><center>Precio por porción</center></th>
+	                                            <th><center>Estado</center></th>
 	                                        </tr>
 	                                    </thead>
 	                                    <tbody>
 	                                    	<tr th:each="orders: ${session.ordersList}">
 	                                    		<td><a th:href="|@{/orderDet/{id}(id=${orders.id})}|" th:text="${orders.evento.nombre}"></a></td>
-	                                    		<td th:text="${orders.evento.empresa.nombre}"/>
-	                                    		<td th:text="${orders.evento.empresa.direccion}"/>
-	                                    		<td th:text="${orders.cantidad}"/>
-	                                    		<td th:text="${orders.evento.precio}"/>
-					                            <td><label th:if="${orders.evento.habilitado}">No</label>
-					                            	<label th:if="${!orders.evento.habilitado}">Si</label>
+	                                    		<td style="text-align: center" th:text="${orders.evento.empresa.nombre}"/>
+	                                    		<td style="text-align: center" th:text="${orders.evento.empresa.direccion}"/>
+	                                    		<td style="text-align: center" th:text="${orders.cantidad}"/>
+	                                    		<td style="text-align: right" th:text="'$'+${orders.evento.precio}"/>
+					                            <td style="text-align: center"><label th:if="${orders.evento.habilitado}">Vigente</label>
+					                            	<label th:if="${!orders.evento.habilitado}">Terminado</label>
 					                            </td>
 	                                    	</tr>
 	                                    </tbody>
