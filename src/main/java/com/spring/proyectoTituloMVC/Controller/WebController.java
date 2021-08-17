@@ -72,7 +72,7 @@ public class WebController {
 			model.addAttribute("user", user);
 			session.setAttribute("user", user);
 		}
-		
+		loadIndexEvents(model,session);
 		return "index";
 	}
 	

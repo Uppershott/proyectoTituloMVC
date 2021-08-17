@@ -54,19 +54,19 @@
 	                                            	<div class="col-md-4">
 	                                            		<div class="form-group">
 	                                                		<label class="small mb-1" for="inputDate">Fecha de término</label>
-	                                               			<input class="form-control py-4"  type="date" th:value="${session.eventD.fechaTermino}" name="dateEventDetail" readonly/>
+	                                               			<input class="form-control py-4" style="text-align: center" type="date" th:value="${session.eventD.fechaTermino}" name="dateEventDetail" readonly/>
 	                                        			</div>
 	                                            	</div>
 	                                                <div class="col-md-4">
 	                                                	<div class="form-group">
 	                                               			<label class="small mb-1" for="inputCantidad">Cantidad de pedidos disponibles</label>
-	                                                		<input class="form-control py-4"  type="text" th:value="${session.eventD.cantidadDisp}" name="cantidadEventDetail" readonly/>
+	                                                		<input class="form-control py-4" style="text-align: center" type="text" th:value="${session.eventD.cantidadDisp}" name="cantidadEventDetail" readonly/>
 	                                            		</div>
 	                                            	</div>
 	                                            	<div class="col-md-4">
 	                                                	<div class="form-group">
 	                                               			<label class="small mb-1" for="inputPrice">Precio por persona</label>
-	                                                		<input class="form-control py-4"  type="text" th:value="${session.eventD.precio}" name="priceEventDetail" readonly/>
+	                                                		<input class="form-control py-4" style="text-align: center" type="text" th:value="'$'+${session.eventD.precio}" name="priceEventDetail" readonly/>
 	                                            		</div>
 	                                            	</div>
 	                                            </div>
@@ -91,13 +91,13 @@
 			                                			<div class="col-md-6"> 
 					                                		<div class="form-group">
 					                                			<label class="small mb-1" for="inputPrice"><b>Cantidad de unidades reservada</b></label>
-					                                			<input class="form-control py-4"  type="text" th:value="${session.order.cantidad}" name="cantidadOrderDetail" readonly/>
+					                                			<input class="form-control py-4" style="text-align: center" type="text" th:value="${session.order.cantidad}" name="cantidadOrderDetail" readonly/>
 					                                		</div>
 					                                	</div>
 					                                	<div class="col-md-6"> 
 					                                		<div class="form-group">
 					                                			<label class="small mb-1" for="inputPrice"><b>Costo total del pedido</b></label>
-					                                			<input class="form-control py-4"  type="text" th:value="${session.order.cantidad*session.eventD.precio}" name="totalCostOrderDetail" readonly/>
+					                                			<input class="form-control py-4" style="text-align: center" type="text" th:value="'$'+${session.order.cantidad*session.eventD.precio}" name="totalCostOrderDetail" readonly/>
 					                                		</div>
 					                                	</div>
 					                                </div>

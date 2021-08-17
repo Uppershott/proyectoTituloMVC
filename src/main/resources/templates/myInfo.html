@@ -61,8 +61,10 @@
 	                               		
                                		</div>
                                		<hr>
+                               		<div th:if="${!userEventsEna.empty}">
                                		<center><label class="small mb-1" for="inputName">*Eventos Vigentes</label></center>
-                               		<table style="text-align:center" title="Eventos terminados" cellpadding="0"  id="example2" name="dataTable2" width="95%">
+                               		
+                               		<table style="text-align:center" title="Eventos vigentes" cellpadding="0"  id="example2" name="dataTable2" width="95%">
 	                                    <thead>
 	                                        <tr>
 	                                            <th>Nombre del Evento</th>
@@ -82,6 +84,12 @@
 		                                    	</tr>
 		                                    </tbody>
 	                                </table>
+	                                </div>
+	                                <div th:if="${userEventsEna.empty}">
+	                                	<ol class="breadcrumb mb-4">
+				                    		<li class="breadcrumb-item active"><b>No tiene eventos vigentes</b></li>
+				                 		</ol>
+	                                </div>
 	                                <hr>
 	                                <center><label class="small mb-1" for="inputName">*Eventos Terminados</label></center>
                                		<table style="text-align:center" title="Eventos terminados" cellpadding="0"  id="example" name="dataTable" width="95%">
