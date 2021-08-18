@@ -205,6 +205,9 @@ public class EventController {
 		}else if(fTerm.before(hoy)) {
 			System.out.println("Error: la fecha de término no puede ser anterior a la fecha actual");
 			result.addError(new FieldError("event", "fechaTermino", "La fecha de término no puede ser anterior a la fecha actual"));
+		}else if(eventService.getEventsByNombre(event.getNombre())!=null) {
+			System.out.println("Error: ya existe un evento con ese nombre");
+			result.addError(new FieldError("event", "nombre","El nombre de este evento ya se encuentra registrado"));
 		}
 		
 		if(result.hasErrors()) {
@@ -246,7 +249,7 @@ public class EventController {
 		eventService.save(eventAux);
 		System.out.println("Guardado en base de datos eventAux 1era vez antes del For...");
 		
-		Event eventAux2 = eventService.getEventsByNombre(eventAux.getNombre());
+		//Event eventAux2 = eventService.getEventsByNombre(eventAux.getNombre());
 		
 		
 		
@@ -255,7 +258,7 @@ public class EventController {
 				System.out.println("Platillo: "+dishes.get(i).getNombre()+" seleccionado...");
 				Contain contained = new Contain();
 				
-				contained.setEventoContener(eventAux2);
+				contained.setEventoContener(eventAux);
 				System.out.println("Seteado en contained evento...");
 				
 				System.out.println("Platillo: "+ dishes.get(i).getNombre()+" agregado a dishesContained...");
@@ -269,8 +272,8 @@ public class EventController {
 			}
 		}
 		
-		eventAux2.setMisPlatillos(allContained);
-		eventService.save(eventAux2);
+		eventAux.setMisPlatillos(allContained);
+		eventService.save(eventAux);
 		
 		loadMyEvents(model,session);
 		unselectDishes(model,session);
